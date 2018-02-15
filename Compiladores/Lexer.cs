@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 public class Lexer
 {
-    int index = 0;
+    public int index = 0;
 
-
-    public Token NextToken(string input, List<string> reserverdWords)
+    public Token NextToken(String input, List<String> reservedWords)
     {
         int edo = 0;
 

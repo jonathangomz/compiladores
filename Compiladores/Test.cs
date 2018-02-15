@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 public class Test
 {
 
-    public List<string> reservedWords = new List<string>();
-    public string input;
+    public static List<String> reservedWords = new List<String>();
+    public static String input;
 
     public Test()
 	{
 	}
 
-    public void Main()
+    public static void Main()
     {
         reservedWords.Add("if");
         input = "a+b";
