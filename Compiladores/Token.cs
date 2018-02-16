@@ -3,7 +3,7 @@
 public class Token
 {
     TokenType type;
-    String text;
+    string text;
 
     public Token()
     {
@@ -11,7 +11,7 @@ public class Token
         text = "not assigned";
     }
 
-    public Token(TokenType t, String text)
+    public Token(TokenType t, string text)
     {
         this.type = t;
         this.text = text;

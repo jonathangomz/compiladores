@@ -19,6 +19,8 @@ public class Test
         Token t = l.NextToken(input, reservedWords);
         while (t.Type != TokenType.TOKEN_NONE)
         {
+            t = l.NextToken(input, reservedWords);
+            Console.WriteLine("regresó: "+t);
             Console.WriteLine("" + t.Text + t.Type);
             Console.ReadKey();
         }
