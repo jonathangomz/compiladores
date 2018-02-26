@@ -20,15 +20,13 @@ public class Compiladores
 
         //ravenClient.Capture(new SentryEvent("Hello World!"));
 
+        ListaLexer l = new ListaLexer();
+
+        input = "a+b*123";
         reservedWords.Add("if");
-        input = "a+b*13/2";
-        Lexer l = new Lexer();
-        Token t = l.NextToken(input, reservedWords);
-        while (t.Type != TokenType.TOKEN_NONE)
-        {
-            Console.WriteLine("" + t.Text + t.Type);
-            t = l.NextToken(input, reservedWords);
-        }
+
+        List<Token> test = l.getListaToken(input, reservedWords);
+        Console.WriteLine(test.GetRange(0,1));
         Console.ReadKey();
     }
 }
