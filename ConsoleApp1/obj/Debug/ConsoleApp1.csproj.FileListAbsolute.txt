@@ -1,0 +1,13 @@
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csprojResolveAssemblyReference.cache
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CoreCompileInputs.cache
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\SharpRaven.dll
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\SharpRaven.pdb
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\SharpRaven.xml
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe.config
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
