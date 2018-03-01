@@ -5,18 +5,25 @@ using System.Text.RegularExpressions;
 
 internal class Lexer
 {
+/* Variables del método NextToken() */
     public int index = 0;
     public int edo = 0;
-
+    // Parámetros variables para crear el Token()
     public string text = "";
     public TokenType tokenType = TokenType.TOKEN_NONE;
 
+/* Variables del método ListOfToken() */
+    List<Token> list = new List<Token>();
+
+/* Regular Expressions */
     public Regex simbol = new Regex(@"[+, *,\/,\-, (, ), [,\],{,}]");
 
+/* Constructor */
     public Lexer()
     {
     }
 
+/* NextToken(string, List<string>) returns Token */
     public Token NextToken(string input, List<string> reservedWords)
     {
         for (int i = index; i < input.Length; i++)
@@ -109,6 +116,18 @@ internal class Lexer
             }
         }
         return new Token();
+    }
+
+/* ListOfToken(string, List<string>) returns List<Token> */
+    public List<Token> ListOfToken(string input, List<string> reservedWords)
+    {
+        Token t = NextToken(input, reservedWords);
+        while (t.Type != TokenType.TOKEN_NONE)
+        {
+            list.Add(t);
+            t = NextToken(input, reservedWords);
+        }
+        return list;
     }
 
     public void getTokens()
