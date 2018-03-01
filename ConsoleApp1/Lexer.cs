@@ -29,7 +29,6 @@ internal class Lexer
         for (int i = index; i < input.Length; i++)
         {
             char c = input[i];
-            Console.Write("c: " + c + " edo: " + edo + " index: " + index + " => ");
             while ((c == ' ' || c == '\t') && edo == 0)
             {
                 i++;
