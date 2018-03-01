@@ -17,8 +17,10 @@ internal class Lexer
 
 /* Regular Expressions */
     public Regex simbol = new Regex(@"[+, *,\/,\-, (, ), [,\],{,}]");
+    /* USAR EN EL PROGRAMA FINAL */
+    //public Regex charAllow = new Regex(@"[+, *,\/,\-, (, ), [,\],{,},a-z,A-Z,0-9]"); 
 
-/* Constructor */
+    /* Constructor */
     public Lexer()
     {
     }
@@ -129,7 +131,11 @@ internal class Lexer
         return list;
     }
 
-    public void getTokens()
-    {
-    }
+    /* USAR EN EL PROGRAMA FINAL */
+ /* CheckInput(string) returns Boolean */
+    //  public bool CheckInput(string text)
+    //  {
+    //      if (charAllow.IsMatch(text)) { return true; }
+    //      else { return false; }
+    //  }
 }
