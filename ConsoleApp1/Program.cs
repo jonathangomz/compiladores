@@ -23,7 +23,7 @@ public class Compiladores
         {
             input = "a+b*123";
             reservedWords.Add("if");
-
+            Sintact asd = new Sintact(input, reservedWords); 
             Lexer lex = new Lexer();
             List<Token> listTokens = lex.ListOfToken(input, reservedWords);
 
