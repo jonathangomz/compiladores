@@ -36,7 +36,8 @@ public class Compiladores
                 reservedWords.Add("if");
 
                 // Se inicializan las clases que ejecutarán el chequeo
-                Parser par = new Parser(input, reservedWords);
+                Compiler compi = new Compiler(input, reservedWords); // Working...
+                Parser par = new Parser();
                 Lexer lex = new Lexer();
 
                 // Se obtiene la lista de Tokens del texto ingresado
@@ -49,7 +50,7 @@ public class Compiladores
                 });
 
                 // Se ejecuta el chequeo sintáctico
-                float r = par.Expression();
+                float r = par.Expression(input, reservedWords);
 
                 // Se imprime el resultado. En caso de ser 1 la sintaxis es correcta, de ser 0 es incorrecta
                 Console.WriteLine("Respuesta => "+r);
