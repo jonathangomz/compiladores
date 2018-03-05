@@ -1,0 +1,12 @@
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Compiladores.exe.config
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Compiladores.exe
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Compiladores.pdb
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\SharpRaven.dll
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\SharpRaven.pdb
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\SharpRaven.xml
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\Compiladores.exe.config
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\Compiladores.csproj.CoreCompileInputs.cache
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\Compiladores.exe
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\Compiladores.pdb
