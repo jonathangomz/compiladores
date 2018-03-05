@@ -116,7 +116,7 @@ internal class Lexer
                 return new Token(tokenType, text);
             }
         }
-        return new Token();
+        return new Token(TokenType.EOL, "");
     }
 
 /* ListOfToken(string, List<string>) returns List<Token> */
