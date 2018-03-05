@@ -17,8 +17,6 @@ internal class Lexer
 
 /* Regular Expressions */
     public Regex simbol = new Regex(@"[+, *,\/,\-, (, ), [,\],{,}]");
-    /* USAR EN EL PROGRAMA FINAL */
-    //public Regex charAllow = new Regex(@"[+, *,\/,\-, (, ), [,\],{,},a-z,A-Z,0-9]"); 
 
     /* Constructor */
     public Lexer()
