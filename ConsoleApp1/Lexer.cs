@@ -123,19 +123,11 @@ internal class Lexer
     public List<Token> ListOfToken(string input, List<string> reservedWords)
     {
         Token t = NextToken(input, reservedWords);
-        while (t.Type != TokenType.TOKEN_NONE)
+        while (t.Type != TokenType.EOL)
         {
             list.Add(t);
             t = NextToken(input, reservedWords);
         }
         return list;
     }
-
-    /* USAR EN EL PROGRAMA FINAL */
- /* CheckInput(string) returns Boolean */
-    //  public bool CheckInput(string text)
-    //  {
-    //      if (charAllow.IsMatch(text)) { return true; }
-    //      else { return false; }
-    //  }
 }
