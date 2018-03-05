@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 internal class Parser
 {
-    string input; 
-    List<string> reservedWords;
-
     bool huboerror  = false;        // Si ocurre un error no sigue avanzando
     bool advance    = false;        //Para llevar un control del avance de los tokens a analizar
 
@@ -13,20 +10,17 @@ internal class Parser
     Token tok       = new Token();
 
     /* Constructores */
-    public Parser(string input, List<string> reservedWords)
+    public Parser()
     {
-        this.input          = input;
-        this.reservedWords  = reservedWords;
-        tok                 = l.NextToken(input, reservedWords);
     }
-    public Parser(){ }
 
  /* Métodos de la Clase */
-    public float Expression()
+    public float Expression(string input, List<string> reservedWords)
     {
+        tok = l.NextToken(input, reservedWords);
         do
         {
-            Termino();
+            Termino(input, reservedWords);
             if (advance)
             {
                 tok = l.NextToken(input, reservedWords); advance = false;
@@ -41,12 +35,12 @@ internal class Parser
         else return 1;
     }
 
-    public float Termino()
+    public float Termino(string input, List<string> reservedWords)
     {
         if (huboerror) return 0;
         do
         {
-            Factor();
+            Factor(input, reservedWords);
             if (advance)
             {
                 tok = l.NextToken(input, reservedWords); advance = false;
@@ -59,7 +53,7 @@ internal class Parser
         return 1;
     }
 
-    private float Factor()
+    private float Factor(string input, List<string> reservedWords)
     {
         if (huboerror) return 0;
 
