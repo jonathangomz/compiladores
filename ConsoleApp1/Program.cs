@@ -21,16 +21,19 @@ public class Compiladores
         //ravenClient.Capture(new SentryEvent("Hello World!"));
         try
         {
-            input = "a+b*123";
+            input = "a+b";
             reservedWords.Add("if");
-            Sintact asd = new Sintact(input, reservedWords); 
+            Parser par = new Parser(input, reservedWords); 
             Lexer lex = new Lexer();
             List<Token> listTokens = lex.ListOfToken(input, reservedWords);
 
+            float r = par.Expression();
             listTokens.ForEach(delegate (Token tok)
             {
                 Console.WriteLine(tok.Text + " => " + tok.Type);
             });
+
+            Console.WriteLine(r);
         }
         catch (Exception ex)
         {
