@@ -36,12 +36,12 @@ public class Compiladores
                 reservedWords.Add("if");
 
                 // Se inicializan las clases que ejecutarán el chequeo
-                Compiler compi = new Compiler(input, reservedWords); // Working...
-                Parser par = new Parser();
-                Lexer lex = new Lexer();
+                //** Compiler compi  = new Compiler(input, reservedWords); // Working on it...
+                Parser par      = new Compiler(input, reservedWords);
+                Lexer lex       = new Compiler(input, reservedWords);
 
                 // Se obtiene la lista de Tokens del texto ingresado
-                List<Token> listTokens = lex.ListOfToken(input, reservedWords);
+                List<Token> listTokens = lex.ListOfToken();
 
                 // Se imprimen los Tokens para comparación
                 listTokens.ForEach(delegate (Token tok)
@@ -53,7 +53,7 @@ public class Compiladores
                 float r = par.Expression(input, reservedWords);
 
                 // Se imprime el resultado. En caso de ser 1 la sintaxis es correcta, de ser 0 es incorrecta
-                Console.WriteLine("Respuesta => "+r);
+                Console.WriteLine("Respuesta => " + r);
 
                 // Pregunta para salir o continuar
                 Console.ReadKey();
@@ -63,7 +63,7 @@ public class Compiladores
         }
         catch (Exception ex)
         {
-            Console.WriteLine("ERR => "+ex.Message);
+            Console.WriteLine("ERR => " + ex.Message);
             SaveError(ravenClient, ex);
         }
     }
