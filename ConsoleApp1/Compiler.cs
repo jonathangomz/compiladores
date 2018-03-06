@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-internal class Compiler
+internal class Compiler: Parser
 {
-    string input;
-    List<string> reservedWords;
-
-    Lexer lex   = new Lexer();
-    Parser par  = new Parser();
 
     public Compiler(string input, List<string> reservedWords)
     {
