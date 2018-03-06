@@ -1,54 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 
-internal class Parser
+internal class Parser: Lexer
 {
-    bool huboerror  = false;        // Si ocurre un error no sigue avanzando
-    bool advance    = true;        //Para llevar un control del avance de los tokens a analizar
+    bool advance    = true;         // Para llevar un control del avance de los tokens a analizar
 
-    Lexer l         = new Lexer();
     Token tok       = new Token();
-    Token tokErr    = new Token();
+
+    Stack<Token> PAR = new Stack<Token>();
 
     /* Constructores */
+    public Parser(string input, List<string> reservedWords)
+    {
+        
+    }
+
     public Parser()
     {
     }
 
  /* Métodos de la Clase */
-    public float Expression(string input, List<string> reservedWords) //=> Arreglar lo de paréntesis de clausura
+    public virtual float Expression(string input, List<string> reservedWords) //=> Arreglar lo de paréntesis de clausura
     {
-        tok = l.NextToken(input, reservedWords);
+        tok = NextToken(input, reservedWords);
         do
         {
             Termino(input, reservedWords);
             if (advance)
             {
-                tok = l.NextToken(input, reservedWords); advance = false;
+                tok = NextToken(input, reservedWords); advance = false;
             }
             if (tok.Type == TokenType.SUM || tok.Type == TokenType.RES)
             {
-                tok = l.NextToken(input, reservedWords); advance = true;
+                tok = NextToken(input, reservedWords); advance = true;
             }
         } while(advance);
         // El primer método debe de llevar esto al final**
-        if (huboerror) return 0;
+        if (huboerror) return -1;
         else return 1;
     }
 
     public float Termino(string input, List<string> reservedWords)
     {
-        if (huboerror) return 0;
+        if (huboerror) return -1;
         do
         {
             Factor(input, reservedWords);
             if (advance)
             {
-                tok = l.NextToken(input, reservedWords); advance = false;
+                tok = NextToken(input, reservedWords); advance = false;
             }
             if (tok.Type == TokenType.MUL || tok.Type == TokenType.DIV)
             {
-                tok = l.NextToken(input, reservedWords); advance = true;
+                tok = NextToken(input, reservedWords); advance = true;
             }
         } while (advance);
         return 1;
@@ -56,34 +60,43 @@ internal class Parser
 
     private float Factor(string input, List<string> reservedWords)
     {
-        if (huboerror) return 0;
+        if (huboerror) return -1;
 
-        if (tok.Type == TokenType.ID)
+        if (tok.Type == TokenType.ID) // Si es ID
         {
             advance = true;
             return 1;
         }
-        if (tok.Type == TokenType.PARA)
+        if (tok.Type == TokenType.NUM) // Si es NUM
         {
+            advance = true;
+            return 1;
+        }
+        if (tok.Type == TokenType.PARA) // Si es paréntesis de apertura
+        {
+            PAR.Push(tok);
             Expression(input, reservedWords);
-            if (tok.Type == TokenType.PARC)
+            if (tok.Type == TokenType.PARC) // Deberá tener paréntesis de cierre
+            {
+                PAR.Pop();
                 return 1;
+            }
             else
             {
-                return Error(tok);
+                return Error(tok, "No se encontró paréntesis de cierre");
             }
         }
         else
         {
-            return Error(tok);
+            return Error(tok, "Se esperaba un ID o NUM");
         }
     }
 
-    private float Error(Token tok)
+    public override float Error(dynamic tok, string msg)
     {
         tokErr = tok;
-        Console.WriteLine("ERR =>" + tokErr.Type);
+        Console.WriteLine("ERR => " + tokErr.Type+": "+msg);
         huboerror = true;
-        return 0;
+        return -1;
     }
 }
