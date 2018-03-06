@@ -3,22 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-internal class Lexer
+internal class Lexer: Bases
 {
 /* Variables del método NextToken() */
-    public int index = 0;
-    public int edo = 0;
+    internal int index = 0;
+    internal int edo = 0;
     // Parámetros variables para crear el Token()
-    public string text = "";
-    public TokenType tokenType = TokenType.TOKEN_NONE;
+    internal string text = "";
+    internal TokenType tokenType = TokenType.TOKEN_NONE;
 
 /* Variables del método ListOfToken() */
-    List<Token> list = new List<Token>();
+    public List<Token> list = new List<Token>();
 
 /* Regular Expressions */
-    public Regex simbol = new Regex(@"[+, *,\/,\-, (, ), [,\],{,}]");
+    internal Regex simbol = new Regex(@"[+, *,\/,\-, (, ), [,\],{,}]");
 
     /* Constructor */
+    public Lexer(string input, List<string> reservedWords)
+    {
+        this.input = input;
+        this.reservedWords = reservedWords;
+    }
     public Lexer()
     {
     }
@@ -123,12 +128,16 @@ internal class Lexer
                 index = i;
                 return new Token(tokenType, text);
             }
+            else
+            {
+                Error(new Token(), "No se reconoce el Token");
+            }
         }
         return new Token(TokenType.EOL, "");
     }
 
 /* ListOfToken(string, List<string>) returns List<Token> */
-    public List<Token> ListOfToken(string input, List<string> reservedWords)
+    public List<Token> ListOfToken()
     {
         Token t = NextToken(input, reservedWords);
         while (t.Type != TokenType.EOL)
