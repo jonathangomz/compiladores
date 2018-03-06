@@ -8,6 +8,7 @@ internal class Parser
 
     Lexer l         = new Lexer();
     Token tok       = new Token();
+    Token tokErr    = new Token();
 
     /* Constructores */
     public Parser()
@@ -57,16 +58,29 @@ internal class Parser
     {
         if (huboerror) return 0;
 
-        if (tok.Type != TokenType.ID)
-        {
-            Console.WriteLine("ERR");
-            huboerror = true;
-            return 0;
-        }
-        else
+        if (tok.Type == TokenType.ID)
         {
             advance = true;
             return 1;
+        }
+        if (tok.Type == TokenType.PARA)
+        {
+            advance = true;
+            Expression(input, reservedWords);
+            if (tok.Type == TokenType.PARC)
+                return 1;
+            else
+            {
+                huboerror = true;
+                return 0;
+            }
+        }
+        else
+        {
+            tokErr = tok;
+            Console.WriteLine("ERR =>" + tokErr.Type);
+            huboerror = true;
+            return 0;
         }
     }
 }
