@@ -4,7 +4,7 @@ using System.Collections.Generic;
 internal class Parser
 {
     bool huboerror  = false;        // Si ocurre un error no sigue avanzando
-    bool advance    = false;        //Para llevar un control del avance de los tokens a analizar
+    bool advance    = true;        //Para llevar un control del avance de los tokens a analizar
 
     Lexer l         = new Lexer();
     Token tok       = new Token();
@@ -16,7 +16,7 @@ internal class Parser
     }
 
  /* Métodos de la Clase */
-    public float Expression(string input, List<string> reservedWords)
+    public float Expression(string input, List<string> reservedWords) //=> Arreglar lo de paréntesis de clausura
     {
         tok = l.NextToken(input, reservedWords);
         do
@@ -65,22 +65,25 @@ internal class Parser
         }
         if (tok.Type == TokenType.PARA)
         {
-            advance = true;
             Expression(input, reservedWords);
             if (tok.Type == TokenType.PARC)
                 return 1;
             else
             {
-                huboerror = true;
-                return 0;
+                return Error(tok);
             }
         }
         else
         {
-            tokErr = tok;
-            Console.WriteLine("ERR =>" + tokErr.Type);
-            huboerror = true;
-            return 0;
+            return Error(tok);
         }
+    }
+
+    private float Error(Token tok)
+    {
+        tokErr = tok;
+        Console.WriteLine("ERR =>" + tokErr.Type);
+        huboerror = true;
+        return 0;
     }
 }
