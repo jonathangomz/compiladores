@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-internal class Bases
+internal class CompilerBase
 {
     protected string input;
     protected List<string> reservedWords;
