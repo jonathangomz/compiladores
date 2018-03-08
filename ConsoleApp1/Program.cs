@@ -22,11 +22,12 @@ public class Compiladores
     {
         var ravenClient = new RavenClient("https://b75d8a0984ba48c39a2ae86070f9eb04:0ccab29913eb4a34b8c0013ab7036637@sentry.io/291909");
 
-        try
+        /* PROGRAMA PRINCIPAL */
+        while (true)
         {
-            /* PROGRAMA PRINCIPAL */
-            while (true)
+            try
             {
+
                 Console.WriteLine("Introduce el comando: ");
 
                 // Se introduce un comando
@@ -37,40 +38,48 @@ public class Compiladores
 
                 // Se inicializan las clases que ejecutarán el chequeo
                 //** Compiler compi  = new Compiler(input, reservedWords); // Working on it...
-                Parser par      = new Compiler(input, reservedWords);
-                Lexer lex       = new Compiler(input, reservedWords);
+                Parser par = new Compiler(input, reservedWords);
+                Lexer lex = new Compiler(input, reservedWords);
 
-                // Se obtiene la lista de Tokens del texto ingresado
-                List<Token> listTokens = lex.ListOfToken();
-
-                // Se imprimen los Tokens para comparación
-                listTokens.ForEach(delegate (Token tok)
+                try
                 {
-                    Console.WriteLine(tok.Text + " => " + tok.Type);
-                });
+                    // Se obtiene la lista de Tokens del texto ingresado
+                    List<Token> listTokens = lex.ListOfToken();
 
-                // Se ejecuta el chequeo sintáctico
-                float r = par.Expression();
+                    // Se imprimen los Tokens para comparación
+                    listTokens.ForEach(delegate (Token tok)
+                    {
+                        Console.WriteLine(tok.Text + " => " + tok.Type);
+                    });
 
-                // Se imprime el resultado. En caso de ser 1 la sintaxis es correcta, de ser 0 es incorrecta
-                Console.WriteLine("Respuesta => " + r);
+                    // Se ejecuta el chequeo sintáctico
+                    float r = par.Expression();
 
-                // Pregunta para salir o continuar
-                Console.ReadKey();
-                AskToExit();
+                    // Se imprime el resultado. En caso de ser 1 la sintaxis es correcta, de ser 0 es incorrecta
+                    Console.WriteLine("Respuesta => " + r);
+                }
+                catch (Exception ex) 
+                    when (
+                        ex.InnerException.GetType() == typeof(DivideByZeroException) || // Si es del Lexer
+                        ex.InnerException.GetType() == typeof(DivideByZeroException)    // Si es del Parser
+                    )                                                                   //... etc.
+                {
+                    Console.WriteLine("Error en comando => "+ex.Message);
+                }
+                finally
+                {
+                    Console.ReadKey();
+                    // Pregunta para salir o continuar
+                    AskToExit();
+                    /*FIN DE PROGRAMA PRINCIPAL */
+                }
             }
-            /*FIN DE PROGRAMA PRINCIPAL */
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERR => " + ex.Message);
+                SaveError(ravenClient, ex);
+            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine("ERR => " + ex.Message);
-            SaveError(ravenClient, ex);
-        }
-    }
-
-    private static void Exit()
-    {
-        Environment.Exit(-1);
     }
 
     private static void AskToExit()
@@ -97,7 +106,7 @@ public class Compiladores
         string ask;
         while(true)
         {
-            Console.WriteLine("¿Guardar el error? y/[n]");
+            Console.WriteLine("¿Guardar el error? y/n");
             ask = Console.ReadLine();
 
             // Si se desea guardar
@@ -124,5 +133,10 @@ public class Compiladores
             // Si no se reconoce la respuesta
             else Console.WriteLine("No se reconoce comando ingresado => " + ask);
         }
+    }
+
+    private static void Exit()
+    {
+        Environment.Exit(-1);
     }
 }
