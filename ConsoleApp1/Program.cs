@@ -50,7 +50,7 @@ public class Compiladores
                 });
 
                 // Se ejecuta el chequeo sintáctico
-                float r = par.Expression(input, reservedWords);
+                float r = par.Expression();
 
                 // Se imprime el resultado. En caso de ser 1 la sintaxis es correcta, de ser 0 es incorrecta
                 Console.WriteLine("Respuesta => " + r);

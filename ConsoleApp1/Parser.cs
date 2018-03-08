@@ -10,55 +10,50 @@ internal class Parser: Lexer
     Stack<Token> PAR = new Stack<Token>();
 
     /* Constructores */
-    public Parser(string input, List<string> reservedWords)
-    {
-        
-    }
-
     public Parser()
     {
     }
 
  /* Métodos de la Clase */
-    public virtual float Expression(string input, List<string> reservedWords) //=> Arreglar lo de paréntesis de clausura
+    public float Expression() //=> Arreglar lo de paréntesis de clausura
     {
-        tok = NextToken(input, reservedWords);
+        tok = NextToken();
         do
         {
-            Termino(input, reservedWords);
+            Termino();
             if (advance)
             {
-                tok = NextToken(input, reservedWords); advance = false;
+                tok = NextToken(); advance = false;
             }
             if (tok.Type == TokenType.SUM || tok.Type == TokenType.RES)
             {
-                tok = NextToken(input, reservedWords); advance = true;
+                tok = NextToken(); advance = true;
             }
         } while(advance);
         // El primer método debe de llevar esto al final**
-        if (huboerror) return -1;
+        if ((huboerror || tok.Type != TokenType.EOL) && PAR.Count == 0) return Error(tok, "Error al final de la línea") ;
         else return 1;
     }
 
-    public float Termino(string input, List<string> reservedWords)
+    public float Termino()
     {
         if (huboerror) return -1;
         do
         {
-            Factor(input, reservedWords);
+            Factor();
             if (advance)
             {
-                tok = NextToken(input, reservedWords); advance = false;
+                tok = NextToken(); advance = false;
             }
             if (tok.Type == TokenType.MUL || tok.Type == TokenType.DIV)
             {
-                tok = NextToken(input, reservedWords); advance = true;
+                tok = NextToken(); advance = true;
             }
         } while (advance);
         return 1;
     }
 
-    private float Factor(string input, List<string> reservedWords)
+    private float Factor()
     {
         if (huboerror) return -1;
 
@@ -75,10 +70,11 @@ internal class Parser: Lexer
         if (tok.Type == TokenType.PARA) // Si es paréntesis de apertura
         {
             PAR.Push(tok);
-            Expression(input, reservedWords);
+            Expression();
             if (tok.Type == TokenType.PARC) // Deberá tener paréntesis de cierre
             {
                 PAR.Pop();
+                advance = true;
                 return 1;
             }
             else
@@ -90,6 +86,11 @@ internal class Parser: Lexer
         {
             return Error(tok, "Se esperaba un ID o NUM");
         }
+    }
+
+    public void CheckPAR()
+    {
+        ListOfToken();
     }
 
     public override float Error(dynamic tok, string msg)
