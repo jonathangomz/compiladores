@@ -88,11 +88,11 @@ internal class Parser: Lexer
         }
         else
         {
-            return Error(tok, "Se esperaba un ID o NUM");
+            throw new FactorException(string.Format("Se esperaba un ID o NUM se obtuvo => {0}", tok.Type));
         }
     }
 
-    public override float Error(dynamic tok, string msg)
+    public float Error(dynamic tok, string msg)
     {
         tokErr = tok;
         Console.WriteLine("ERR => " + tokErr.Type+": "+msg);
