@@ -130,7 +130,7 @@ internal class Lexer: Bases
             }
             else
             {
-                Error(new Token(), "No se reconoce el Token");
+                throw new ChoosingTokenException(string.Format("No se reconoce el Token {0}", c));
             }
         }
         return new Token(TokenType.EOL, "");
