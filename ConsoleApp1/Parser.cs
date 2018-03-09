@@ -14,13 +14,13 @@ internal class Parser: Lexer
 
     public float Tester()
     {
-        return Expression();
+        tok = NextToken(); // Por mientras **
+        return Out();
     }
 
  /* Métodos de la Clase */
     public float Expression() //=> Arreglar lo de paréntesis de clausura
     {
-        tok = NextToken();
         do
         {
             Termino();
@@ -35,7 +35,7 @@ internal class Parser: Lexer
         } while(advance);
         // El primer método debe de llevar esto al final**
         if ((huboerror || tok.Type != TokenType.EOL) && PAR.Count == 0)
-            throw new ParserException(string.Format("Error al final de la línea => {0} <<({1})", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Error al final de la línea => '{0}' <<({1})", tok.Text, tok.Type));
         else return 1;
     }
 
@@ -57,7 +57,7 @@ internal class Parser: Lexer
         return 1;
     }
 
-    private float Factor()
+    public float Factor()
     {
         if (huboerror) return -1;
 
@@ -74,6 +74,7 @@ internal class Parser: Lexer
         if (tok.Type == TokenType.PARA) // Si es paréntesis de apertura
         {
             PAR.Push(tok);
+            tok = NextToken(); // Por mientras **
             Expression();
             if (tok.Type == TokenType.PARC) // Deberá tener paréntesis de cierre
             {
@@ -83,12 +84,35 @@ internal class Parser: Lexer
             }
             else
             {
-                throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => {0} <<({1})", tok.Text, tok.Type));
+                throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
             }
         }
         else
         {
-            throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo => {0} <<({1})", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
         }
+    }
+
+    public float Out()
+    {
+        if (huboerror) return -1;
+        tok = NextToken();
+        if (tok.Type != TokenType.PARA)
+            throw new ParserException(string.Format("Se esperaba PARA, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+        do
+        {
+            Expression();
+            if (advance)
+            {
+                tok = NextToken(); advance = false;
+            }
+            if (tok.Type == TokenType.COMA)
+            {
+                tok = NextToken(); advance = true;
+            }
+        } while (advance);
+        if (NextToken().Type != TokenType.PARA)
+            throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+        return 1;
     }
 }
