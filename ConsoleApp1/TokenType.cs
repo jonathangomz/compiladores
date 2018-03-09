@@ -29,5 +29,6 @@
     EOL = 100,
     TOKEN_NONE = 101,
     RESERVED = 102,
-    TAN = 103
+    TAN = 103,
+    PRINT = 200
 }

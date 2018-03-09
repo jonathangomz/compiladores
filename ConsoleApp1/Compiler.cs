@@ -25,7 +25,8 @@ internal class Compiler: Parser
             { "return",TokenType.RETURN },
             { "sen",TokenType.SEN },
             { "cos",TokenType.COS },
-            { "tan",TokenType.TAN }
+            { "tan",TokenType.TAN },
+            { "print",TokenType.PRINT }
         };
     }
 }
