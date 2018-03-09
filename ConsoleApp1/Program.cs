@@ -8,7 +8,7 @@ using SharpRaven.Data;
 public class Compiladores
 {
 
-    public static List<String> reservedWords = new List<String>();
+    public static Dictionary<String,TokenType> reservedWords = new Dictionary<string, TokenType>();
     public static String input;
 
     public static Regex yes = new Regex(@"(?i)^(y|Y|YES|Yes|yes)$");
@@ -20,21 +20,21 @@ public class Compiladores
 
     public static void Main()
     {
+        // Se inicializa el DNS para enviar errores a Sentry
         var ravenClient = new RavenClient("https://b75d8a0984ba48c39a2ae86070f9eb04:0ccab29913eb4a34b8c0013ab7036637@sentry.io/291909");
 
+        // Se crea el listado de palabras reservadas (no terminado)
+        reservedWords.Add("if", TokenType.IF);
         /* PROGRAMA PRINCIPAL */
+        Console.WriteLine(" ---- NUEVO COMANDO ----");
         while (true)
         {
             try
             {
-
                 Console.WriteLine("Introduce el comando: ");
 
                 // Se introduce un comando
                 input = Console.ReadLine();
-
-                // Se crea el listado de palabras reservadas (no terminado)
-                reservedWords.Add("if");
 
                 // Se inicializan las clases que ejecutarán el chequeo
                 //** Compiler compi  = new Compiler(input, reservedWords); // Working on it...
