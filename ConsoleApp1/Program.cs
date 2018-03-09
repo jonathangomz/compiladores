@@ -38,8 +38,8 @@ public class Compiladores
 
                 // Se inicializan las clases que ejecutarán el chequeo
                 //** Compiler compi  = new Compiler(input, reservedWords); // Working on it...
-                Parser par = new Compiler(input, reservedWords);
-                Lexer lex = new Compiler(input, reservedWords);
+                Parser par = new Compiler(input);
+                Lexer lex = new Compiler(input);
 
                 // Se obtiene la lista de Tokens del texto ingresado
                 List<Token> listTokens = lex.ListOfToken();
