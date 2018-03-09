@@ -71,6 +71,11 @@ internal class Lexer: CompilerBase
                 edo = 0;
                 return new Token(TokenType.PARC, input.Substring(index, ++index - i));
             }
+            if (edo == 0 && c == ',')
+            {
+                edo = 0;
+                return new Token(TokenType.COMA, input.Substring(index, ++index - i));
+            }
             // **ID**
             // Si es un ID y está al final de la línea
             if (((edo == 0 && Char.IsLetter(c)) || (edo == 3 && Char.IsLetterOrDigit(c))) && i + 1 >= input.Length)
