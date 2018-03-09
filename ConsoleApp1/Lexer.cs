@@ -78,8 +78,11 @@ internal class Lexer: CompilerBase
                 i++;
                 edo = 0;
                 text = input.Substring(index, i - index).Trim();
-                tokenType = TokenType.ID;
                 index = i;
+                if (reservedWords.ContainsKey(text))
+                    tokenType = reservedWords[text];
+                else
+                    tokenType = TokenType.ID;
                 return new Token(tokenType, text);
             }
             // Si comienza un ID o continua sigue al siguiente caracter
@@ -93,8 +96,11 @@ internal class Lexer: CompilerBase
             {
                 edo = 0;
                 text = input.Substring(index, i - index).Trim();
-                tokenType = TokenType.ID;
                 index = i;
+                if (reservedWords.ContainsKey(text))
+                    tokenType = reservedWords[text];
+                else
+                    tokenType = TokenType.ID;
                 return new Token(tokenType, text);
             }
             // **NUM**
