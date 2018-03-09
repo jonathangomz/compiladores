@@ -4,9 +4,7 @@ using System.Collections.Generic;
 internal class Parser: Lexer
 {
     bool advance    = true;         // Para llevar un control del avance de los tokens a analizar
-
     Token tok       = new Token();
-
     Stack<Token> PAR = new Stack<Token>();
 
     /* Constructores */
@@ -31,7 +29,8 @@ internal class Parser: Lexer
             }
         } while(advance);
         // El primer método debe de llevar esto al final**
-        if ((huboerror || tok.Type != TokenType.EOL) && PAR.Count == 0) return Error(tok, "Error al final de la línea") ;
+        if ((huboerror || tok.Type != TokenType.EOL) && PAR.Count == 0)
+            throw new ParserException(string.Format("Error al final de la línea => {0}: {1}", tok.Text, tok.Type));
         else return 1;
     }
 
@@ -79,25 +78,12 @@ internal class Parser: Lexer
             }
             else
             {
-                return Error(tok, "No se encontró paréntesis de cierre");
+                throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => {0}: {1}", tok.Text, tok.Type));
             }
         }
         else
         {
-            return Error(tok, "Se esperaba un ID o NUM");
+            throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo => {0}: {1}", tok.Text, tok.Type));
         }
-    }
-
-    public void CheckPAR()
-    {
-        ListOfToken();
-    }
-
-    public override float Error(dynamic tok, string msg)
-    {
-        tokErr = tok;
-        Console.WriteLine("ERR => " + tokErr.Type+": "+msg);
-        huboerror = true;
-        return -1;
     }
 }
