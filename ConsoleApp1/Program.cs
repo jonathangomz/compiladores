@@ -41,43 +41,40 @@ public class Compiladores
                 Parser par = new Compiler(input, reservedWords);
                 Lexer lex = new Compiler(input, reservedWords);
 
-                try
-                {
-                    // Se obtiene la lista de Tokens del texto ingresado
-                    List<Token> listTokens = lex.ListOfToken();
+                // Se obtiene la lista de Tokens del texto ingresado
+                List<Token> listTokens = lex.ListOfToken();
 
-                    // Se imprimen los Tokens para comparación
-                    listTokens.ForEach(delegate (Token tok)
-                    {
-                        Console.WriteLine(tok.Text + " => " + tok.Type);
-                    });
-
-                    // Se ejecuta el chequeo sintáctico
-                    float r = par.Expression();
-
-                    // Se imprime el resultado. En caso de ser 1 la sintaxis es correcta, de ser 0 es incorrecta
-                    Console.WriteLine("Respuesta => " + r);
-                }
-                catch (Exception ex) 
-                    when (
-                        ex.InnerException.GetType() == typeof(DivideByZeroException) || // Si es del Lexer
-                        ex.InnerException.GetType() == typeof(DivideByZeroException)    // Si es del Parser
-                    )                                                                   //... etc.
+                // Se imprimen los Tokens para comparación
+                listTokens.ForEach(delegate (Token tok)
                 {
-                    Console.WriteLine("Error en comando => "+ex.Message);
-                }
-                finally
-                {
-                    Console.ReadKey();
-                    // Pregunta para salir o continuar
-                    AskToExit();
-                    /*FIN DE PROGRAMA PRINCIPAL */
-                }
+                    Console.WriteLine(tok.Text + " => " + tok.Type);
+                });
+
+                // Se ejecuta el chequeo sintáctico
+                float r = par.Expression();
+
+                // Se imprime el resultado. En caso de ser 1 la sintaxis es correcta, de ser 0 es incorrecta
+                Console.WriteLine("Respuesta => " + r);
+            }
+            catch (CompilerBase.LexerException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (CompilerBase.ParserException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("ERR => " + ex.Message);
                 SaveError(ravenClient, ex);
+            }
+            finally
+            {
+                Console.ReadKey();
+                // Pregunta para salir o continuar
+                AskToExit();
+                /*FIN DE PROGRAMA PRINCIPAL */
             }
         }
     }
