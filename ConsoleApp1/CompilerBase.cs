@@ -4,7 +4,7 @@ using System.Collections.Generic;
 internal class CompilerBase
 {
     protected string input;
-    protected List<string> reservedWords;
+    protected Dictionary<string, TokenType> reservedWords;
 
     public Token tokErr = new Token(); //No se ocupa en el contexto actual del proyecto 
     protected bool huboerror = false;  //Hasta ahora solo se ocupa en la clase Parser
