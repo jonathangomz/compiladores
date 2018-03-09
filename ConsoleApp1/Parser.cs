@@ -30,7 +30,7 @@ internal class Parser: Lexer
         } while(advance);
         // El primer método debe de llevar esto al final**
         if ((huboerror || tok.Type != TokenType.EOL) && PAR.Count == 0)
-            throw new ParserException(string.Format("Error al final de la línea => {0}: {1}", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Error al final de la línea => {0} <<({1})", tok.Text, tok.Type));
         else return 1;
     }
 
@@ -78,12 +78,12 @@ internal class Parser: Lexer
             }
             else
             {
-                throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => {0}: {1}", tok.Text, tok.Type));
+                throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => {0} <<({1})", tok.Text, tok.Type));
             }
         }
         else
         {
-            throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo => {0}: {1}", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo => {0} <<({1})", tok.Text, tok.Type));
         }
     }
 }
