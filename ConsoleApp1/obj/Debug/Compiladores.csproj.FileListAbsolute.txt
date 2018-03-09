@@ -24,3 +24,4 @@ C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\obj\Debug\Compiladores.
 C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\obj\Debug\Compiladores.exe
 C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\obj\Debug\Compiladores.pdb
 C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\Compiladores.csprojResolveAssemblyReference.cache
+C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\Compiladores.csproj.CopyComplete
