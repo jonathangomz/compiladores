@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-internal class Lexer: Bases
+internal class Lexer: CompilerBase
 {
 /* Variables del método NextToken() */
     internal int index = 0;
@@ -16,20 +16,15 @@ internal class Lexer: Bases
     public List<Token> list = new List<Token>();
 
 /* Regular Expressions */
-    internal Regex simbol = new Regex(@"[+, *,\/,\-, (, ), [,\],{,}]");
+    Regex simbol = new Regex(@"[+, *,\/,\-, (, ), [,\],{,}]");
 
     /* Constructor */
-    public Lexer(string input, List<string> reservedWords)
-    {
-        this.input = input;
-        this.reservedWords = reservedWords;
-    }
     public Lexer()
     {
     }
 
 /* NextToken(string, List<string>) returns Token */
-    public Token NextToken(string input, List<string> reservedWords)
+    public Token NextToken()
     {
         for (int i = index; i < input.Length; i++)
         {
@@ -139,11 +134,11 @@ internal class Lexer: Bases
 /* ListOfToken(string, List<string>) returns List<Token> */
     public List<Token> ListOfToken()
     {
-        Token t = NextToken(input, reservedWords);
+        Token t = NextToken();
         while (t.Type != TokenType.EOL)
         {
             list.Add(t);
-            t = NextToken(input, reservedWords);
+            t = NextToken();
         }
         return list;
     }
