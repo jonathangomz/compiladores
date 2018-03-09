@@ -12,6 +12,11 @@ internal class Parser: Lexer
     {
     }
 
+    public float Tester()
+    {
+        return Expression();
+    }
+
  /* Métodos de la Clase */
     public float Expression() //=> Arreglar lo de paréntesis de clausura
     {
