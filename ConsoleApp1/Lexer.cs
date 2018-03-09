@@ -125,7 +125,7 @@ internal class Lexer: CompilerBase
             }
             else
             {
-                throw new ChoosingTokenException(string.Format("No se reconoce el Token {0}", c));
+                throw new ParserException(string.Format("No se reconoce el Token {0}", c));
             }
         }
         return new Token(TokenType.EOL, "");
