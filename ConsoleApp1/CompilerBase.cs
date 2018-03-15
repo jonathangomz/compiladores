@@ -7,7 +7,7 @@ internal class CompilerBase
     protected Dictionary<string, TokenType> reservedWords;
 
     public Token tokErr = new Token(); //No se ocupa en el contexto actual del proyecto 
-    protected bool huboerror = false;  //Hasta ahora solo se ocupa en la clase Parser
+    protected bool huboerror = false;  //No se ocupa en el contexto actual del proyecto
 
     public class LexerException: Exception
     {
