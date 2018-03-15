@@ -7,15 +7,23 @@ internal class Parser: Lexer
     Token tok       = new Token();
     Stack<Token> PAR = new Stack<Token>();
 
-    /* Constructores */
+/* 
+         * * Constructores 
+ */
     public Parser()
     {
     }
 
+/*
+         * * THE TESTER METHOD
+         
+ * Description: This method is used to test all the program
+ *              just is necessary change the method inside. 
+ */
     public float Tester()
     {
         tok = NextToken(); // Por mientras **
-        return Out();
+        return Expression();
     }
 
  /* Métodos de la Clase */
@@ -25,77 +33,192 @@ internal class Parser: Lexer
         {
             Termino();
             if (advance)
-            {
-                tok = NextToken(); advance = false;
-            }
+                Advance(false);
             if (tok.Type == TokenType.SUM || tok.Type == TokenType.RES)
-            {
-                tok = NextToken(); advance = true;
-            }
+                Advance(true);
         } while(advance);
         // El primer método debe de llevar esto al final**
-        if ((huboerror || tok.Type != TokenType.EOL) && PAR.Count == 0)
+        if (tok.Type != TokenType.EOL && PAR.Count == 0)
             throw new ParserException(string.Format("Error al final de la línea => '{0}' <<({1})", tok.Text, tok.Type));
         else return 1;
     }
 
     public float Termino()
     {
-        if (huboerror) return -1;
         do
         {
             Factor();
             if (advance)
-            {
-                tok = NextToken(); advance = false;
-            }
+                Advance(false);
             if (tok.Type == TokenType.MUL || tok.Type == TokenType.DIV)
-            {
-                tok = NextToken(); advance = true;
-            }
+                Advance(true);
         } while (advance);
         return 1;
     }
 
     public float Factor()
     {
-        if (huboerror) return -1;
 
         if (tok.Type == TokenType.ID) // Si es ID
-        {
-            advance = true;
-            return 1;
-        }
+            return Advance();
         if (tok.Type == TokenType.NUM) // Si es NUM
+            return Advance();
+        if (tok.Type == TokenType.PARA)
+            return Par();
+        else
+            throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+    }
+
+/*
+ * 
+ * NUEVO MÉTODO (NOT FUNCTIONAL)
+ * 
+ */
+    public float E()
+    {
+        do
         {
-            advance = true;
-            return 1;
-        }
-        if (tok.Type == TokenType.PARA) // Si es paréntesis de apertura
+            E1();
+            if (advance)
+                Advance(false);
+            if (tok.Type == TokenType.OR)
+                Advance(false);
+        } while (advance);
+        if (tok.Type != TokenType.EOL && PAR.Count == 0)
+            throw new ParserException(string.Format("Error al final de la línea => '{0}' <<({1})", tok.Text, tok.Type));
+        return 1;
+    }
+
+    public float E1()
+    {
+        do
         {
-            PAR.Push(tok);
-            tok = NextToken(); // Por mientras **
-            Expression();
-            if (tok.Type == TokenType.PARC) // Deberá tener paréntesis de cierre
+            E2();
+            if (advance)
+                Advance(false);
+            if (tok.Type == TokenType.AND)
+                Advance(true);
+        } while (advance);
+        return 1;
+    }
+
+    public float E2()
+    {
+        if (tok.Type == TokenType.NOT_EQUAL)
+            Advance(true);
+        return E3();
+    }
+
+    public float E3()
+    {
+        do
+        {
+            E4();
+            if (advance)
+                Advance(false);
+            if(tok.Type == TokenType.GREATER        ||
+                tok.Type == TokenType.LESS          ||
+                tok.Type == TokenType.EQUAL         ||
+                tok.Type == TokenType.GREATER_EQUAL ||
+                tok.Type == TokenType.LESS_EQUAL)
             {
-                PAR.Pop();
-                advance = true;
-                return 1;
+                Advance(true);
             }
-            else
-            {
-                throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
-            }
+        } while (advance);
+        return 1;
+    }
+
+    public float E4()
+    {
+        do
+        {
+            E5();
+            if (advance)
+                Advance(false);
+            if(tok.Type == TokenType.SUM || tok.Type == TokenType.RES)
+                Advance(true);
+        } while (advance);
+        return 1;
+    }
+
+    public float E5()
+    {
+        do
+        {
+            E6();
+            if (advance)
+                Advance(false);
+            if (tok.Type == TokenType.DIV || tok.Type == TokenType.MUL || tok.Type == TokenType.MOD)
+                Advance(true);
+        } while (advance);
+        return 1;
+    }
+
+    public float E6()
+    {
+        do
+        {
+            E7();
+            if (advance)
+                Advance(false);
+            if (tok.Type == TokenType.POT)
+                Advance(true);
+        } while (advance);
+        return 1;
+    }
+
+    public float E7()
+    {
+        if (tok.Type == TokenType.SUM ||
+            tok.Type == TokenType.RES)
+        {
+            return Op();
         }
         else
+          throw new ParserException(string.Format("Se esperaba SUM || RES se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+    }
+
+    public float Op()
+    {
+        // Si es un CONST ------- */
+        if (tok.Type == TokenType.INT_CONST ||
+            tok.Type == TokenType.CHAR_CONST ||
+            tok.Type == TokenType.FLOAT_CONST ||
+            tok.Type == TokenType.STRING_CONST)
         {
-            throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+            return Const();
         }
+        // Si es un ID ----------*/
+        if (tok.Type == TokenType.ID)
+        {
+            if (tok.Type == TokenType.PARA)
+                return Par();
+            else
+                throw new ParserException(string.Format("Se esperaba PARA, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+        }
+        // Si es una Expresion -----*/
+        if (tok.Type == TokenType.PARA)
+            return Par();
+        else
+            throw new ParserException(string.Format("Se esperaba ID | CONST | PARA, se obtuvo => '{0}' << ({1})", tok.Text, tok.Type));
+    }
+
+    public float Const()
+    {
+        if (tok.Type == TokenType.INT_CONST)
+            return Advance();
+        if (tok.Type == TokenType.CHAR_CONST)
+            return Advance();
+        if (tok.Type == TokenType.FLOAT_CONST)
+            return Advance();
+        if (tok.Type == TokenType.STRING_CONST)
+            return Advance();
+        else
+            throw new ParserException(string.Format("Se esperaba un CONST se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
     }
 
     public float Out()
     {
-        if (huboerror) return -1;
         tok = NextToken();
         if (tok.Type != TokenType.PARA)
             throw new ParserException(string.Format("Se esperaba PARA, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
@@ -103,16 +226,56 @@ internal class Parser: Lexer
         {
             Expression();
             if (advance)
-            {
-                tok = NextToken(); advance = false;
-            }
+                Advance(false);
             if (tok.Type == TokenType.COMA)
-            {
-                tok = NextToken(); advance = true;
-            }
+                Advance(true);
         } while (advance);
         if (NextToken().Type != TokenType.PARA)
             throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
         return 1;
+    }
+
+/*
+ *
+ *  EXTRAS
+ *  Description: Reduce lines of code above using this methods.
+ * 
+ */
+    public float Par()
+    {
+        /*
+         *  Check Paréntesis 
+         */
+        PAR.Push(tok);
+        tok = NextToken(); // Por mientras **
+        Expression();
+        if (tok.Type == TokenType.PARC) // Deberá tener paréntesis de cierre
+        {
+            PAR.Pop();
+            advance = true;
+            return 1;
+        }
+        else
+        {
+            throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+        }
+    }
+    public float Advance()
+    {
+        /*
+         *  This method is used
+         *  in final ways of the code.
+         */
+        advance = true;
+        return 1;
+    }
+    public void Advance(bool adv)
+    {
+        /*
+         *  This method is used
+         *  to advance the token.
+         */
+        tok = NextToken();
+        advance = adv;
     }
 }
