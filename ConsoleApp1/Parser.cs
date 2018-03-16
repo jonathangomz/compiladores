@@ -23,7 +23,7 @@ internal class Parser: Lexer
     public float Tester()
     {
         tok = NextToken(); // Por mientras **
-        return Expression();
+        return E();
     }
 
  /* Métodos de la Clase */
@@ -84,6 +84,7 @@ internal class Parser: Lexer
             if (tok.Type == TokenType.OR)
                 Advance(false);
         } while (advance);
+        System.Console.WriteLine(tok.Type);
         if (tok.Type != TokenType.EOL && PAR.Count == 0)
             throw new ParserException(string.Format("Error al final de la línea => '{0}' <<({1})", tok.Text, tok.Type));
         return 1;
@@ -172,10 +173,9 @@ internal class Parser: Lexer
         if (tok.Type == TokenType.SUM ||
             tok.Type == TokenType.RES)
         {
-            return Op();
+            Advance(true);
         }
-        else
-          throw new ParserException(string.Format("Se esperaba SUM || RES se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+        return Op();
     }
 
     public float Op()
@@ -191,10 +191,11 @@ internal class Parser: Lexer
         // Si es un ID ----------*/
         if (tok.Type == TokenType.ID)
         {
+            tok = NextToken();
             if (tok.Type == TokenType.PARA)
                 return Par();
             else
-                throw new ParserException(string.Format("Se esperaba PARA, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+                return Advance();
         }
         // Si es una Expresion -----*/
         if (tok.Type == TokenType.PARA)
