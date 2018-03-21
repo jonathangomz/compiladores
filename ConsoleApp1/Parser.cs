@@ -40,7 +40,8 @@ internal class Parser: Lexer
         // El primer método debe de llevar esto al final**
         if (tok.Type != TokenType.EOL && PAR.Count == 0)
             throw new ParserException(string.Format("Error al final de la línea => '{0}' <<({1})", tok.Text, tok.Type));
-        else return 1;
+        else
+            return 1;
     }
 
     public float Termino()
@@ -60,9 +61,9 @@ internal class Parser: Lexer
     {
 
         if (tok.Type == TokenType.ID) // Si es ID
-            return Advance();
+            return Advance(1);
         if (tok.Type == TokenType.NUM) // Si es NUM
-            return Advance();
+            return Advance(1);
         if (tok.Type == TokenType.PARA)
             return Par();
         else
@@ -71,7 +72,7 @@ internal class Parser: Lexer
 
 /*
  * 
- * NUEVO MÉTODO (NOT FUNCTIONAL)
+ *      **NUEVO MÉTODO (NOT FUNCTIONAL) ----------------------------->
  * 
  */
     public float E()
@@ -84,8 +85,7 @@ internal class Parser: Lexer
             if (tok.Type == TokenType.OR)
                 Advance(false);
         } while (advance);
-        System.Console.WriteLine(tok.Type);
-        if (tok.Type != TokenType.EOL && PAR.Count == 0)
+        if ((tok.Type != TokenType.EOL || tok.Type == TokenType.PARC) && PAR.Count == 0)
             throw new ParserException(string.Format("Error al final de la línea => '{0}' <<({1})", tok.Text, tok.Type));
         return 1;
     }
@@ -106,7 +106,7 @@ internal class Parser: Lexer
     public float E2()
     {
         if (tok.Type == TokenType.NOT_EQUAL)
-            Advance(true);
+            Advance(adv: true);
         return E3();
     }
 
@@ -195,7 +195,7 @@ internal class Parser: Lexer
             if (tok.Type == TokenType.PARA)
                 return Par();
             else
-                return Advance();
+                return Advance(0);
         }
         // Si es una Expresion -----*/
         if (tok.Type == TokenType.PARA)
@@ -207,13 +207,13 @@ internal class Parser: Lexer
     public float Const()
     {
         if (tok.Type == TokenType.INT_CONST)
-            return Advance();
+            return Advance(1);
         if (tok.Type == TokenType.CHAR_CONST)
-            return Advance();
+            return Advance(1);
         if (tok.Type == TokenType.FLOAT_CONST)
-            return Advance();
+            return Advance(1);
         if (tok.Type == TokenType.STRING_CONST)
-            return Advance();
+            return Advance(1);
         else
             throw new ParserException(string.Format("Se esperaba un CONST se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
     }
@@ -248,26 +248,31 @@ internal class Parser: Lexer
          *  Check Paréntesis 
          */
         PAR.Push(tok);
-        tok = NextToken(); // Por mientras **
-        Expression();
+        Advance(false);
+        E();
         if (tok.Type == TokenType.PARC) // Deberá tener paréntesis de cierre
         {
             PAR.Pop();
-            advance = true;
-            return 1;
+            Advance(false);
+            if (tok.Type == TokenType.PARA)
+                Par();
+            return Advance(0);
         }
         else
         {
             throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
         }
     }
-    public float Advance()
+    public float Advance(byte i)
     {
         /*
          *  This method is used
          *  in final ways of the code.
          */
-        advance = true;
+        if (i==0)
+            advance = false;
+        else
+            advance = true;
         return 1;
     }
     public void Advance(bool adv)
