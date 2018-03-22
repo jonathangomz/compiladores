@@ -39,7 +39,7 @@ internal class Parser: Lexer
         } while(advance);
         // El primer método debe de llevar esto al final**
         if (tok.Type != TokenType.EOL && PAR.Count == 0)
-            throw new ParserException(string.Format("Error al final de la línea => '{0}' <<({1})", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Error al final de la línea "+errorToken, tok.Text, tok.Type));
         else
             return 1;
     }
@@ -67,7 +67,7 @@ internal class Parser: Lexer
         if (tok.Type == TokenType.PARA)
             return Par();
         else
-            throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo " + errorToken, tok.Text, tok.Type));
     }
 
 /*
@@ -86,7 +86,7 @@ internal class Parser: Lexer
                 Advance(false);
         } while (advance);
         if ((tok.Type != TokenType.EOL || tok.Type == TokenType.PARC) && PAR.Count == 0)
-            throw new ParserException(string.Format("Error al final de la línea => '{0}' <<({1})", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Error al final de la línea " + errorToken, tok.Text, tok.Type));
         return 1;
     }
 
@@ -201,7 +201,7 @@ internal class Parser: Lexer
         if (tok.Type == TokenType.PARA)
             return Par();
         else
-            throw new ParserException(string.Format("Se esperaba ID | CONST | PARA, se obtuvo => '{0}' << ({1})", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Se esperaba ID | CONST | PARA, se obtuvo " + errorToken, tok.Text, tok.Type));
     }
 
     public float Const()
@@ -215,14 +215,14 @@ internal class Parser: Lexer
         if (tok.Type == TokenType.STRING_CONST)
             return Advance(1);
         else
-            throw new ParserException(string.Format("Se esperaba un CONST se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Se esperaba un CONST se obtuvo " + errorToken, tok.Text, tok.Type));
     }
 
     public float Out()
     {
         tok = NextToken();
         if (tok.Type != TokenType.PARA)
-            throw new ParserException(string.Format("Se esperaba PARA, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Se esperaba PARA, se obtuvo " + errorToken, tok.Text, tok.Type));
         do
         {
             Expression();
@@ -232,7 +232,7 @@ internal class Parser: Lexer
                 Advance(true);
         } while (advance);
         if (NextToken().Type != TokenType.PARA)
-            throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " + errorToken, tok.Text, tok.Type));
         return 1;
     }
 
@@ -260,7 +260,7 @@ internal class Parser: Lexer
         }
         else
         {
-            throw new ParserException(string.Format("Se esperaba PARC, se obtuvo => '{0}' <<({1})", tok.Text, tok.Type));
+            throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " + errorToken, tok.Text, tok.Type));
         }
     }
     public float Advance(byte i)

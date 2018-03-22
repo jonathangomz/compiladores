@@ -4,6 +4,7 @@ using System.Collections.Generic;
 internal class CompilerBase
 {
     protected string input;
+    protected string errorToken = "=> '{0}' <<({1})";
     protected Dictionary<string, TokenType> reservedWords;
 
     public Token tokErr = new Token(); //No se ocupa en el contexto actual del proyecto 
