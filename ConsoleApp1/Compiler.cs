@@ -15,18 +15,18 @@ internal class Compiler: Parser
         this.input = input;
         reservedWords = new Dictionary<string, TokenType>()
         {
-            { "if",TokenType.IF },
-            { "else",TokenType.ELSE },
-            { "do",TokenType.DO },
-            { "while",TokenType.WHILE },
-            { "switch",TokenType.SWITCH },
-            { "case",TokenType.CASE },
-            { "for",TokenType.FOR },
-            { "return",TokenType.RETURN },
-            { "sen",TokenType.SEN },
-            { "cos",TokenType.COS },
-            { "tan",TokenType.TAN },
-            { "print",TokenType.PRINT }
+            { "if",     TokenType.IF },
+            { "else",   TokenType.ELSE },
+            { "do",     TokenType.DO },
+            { "while",  TokenType.WHILE },
+            { "switch", TokenType.SWITCH },
+            { "case",   TokenType.CASE },
+            { "for",    TokenType.FOR },
+            { "return", TokenType.RETURN },
+            { "sen",    TokenType.SEN },
+            { "cos",    TokenType.COS },
+            { "tan",    TokenType.TAN },
+            { "print",  TokenType.PRINT }
         };
     }
 }
