@@ -71,7 +71,6 @@ public class Compiladores
             }
             finally
             {
-                Console.ReadKey();
                 // Pregunta para salir o continuar
                 AskToExit();
                 /*FIN DE PROGRAMA PRINCIPAL */
