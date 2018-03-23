@@ -16,7 +16,7 @@ internal class Lexer: CompilerBase
     public List<Token> list = new List<Token>();
 
 /* Regular Expressions */
-    Regex simbol = new Regex(@"[+, *,\/,\-, (, ), [,\],{,}, %, ^, !, =, \|, >, <]");
+    Regex simbol = new Regex(@"[+, *,\/,\-, (, ), [,\],{,}, %, ^, !, =, \|, >, <, ;]");
 
     /* Constructor */
     public Lexer()
@@ -32,6 +32,7 @@ internal class Lexer: CompilerBase
             while ((c == ' ' || c == '\t') && edo == 0)
             {
                 i++;
+                c = input[i];
             }
             if (i >= input.Length)
             {
@@ -71,6 +72,9 @@ internal class Lexer: CompilerBase
             {
                 return new Token(TokenType.POT, input.Substring(index, ++index - i));
             }
+            // **PUNTO Y COMA
+            if (edo == 0 && c == ';')
+                return new Token(TokenType.SEMICOLON, input.Substring(index, ++index - i));
             // **IGUAL O ASIGNACIÓN**
             if(edo == 0 && c == '=')
             {
@@ -162,6 +166,18 @@ internal class Lexer: CompilerBase
             {
                 edo = 0;
                 return new Token(TokenType.PARC, input.Substring(index, ++index - i));
+            }
+            // **LLAVE DE APERTURA**
+            if(edo == 0 && c == '{')
+            {
+                edo = 0;
+                return new Token(TokenType.LLAVEA, input.Substring(index, ++index - i));
+            }
+            // **LLAVE DE CIERRE
+            if (edo == 0 && c == '}')
+            {
+                edo = 0;
+                return new Token(TokenType.LLAVEC, input.Substring(index, ++index - i));
             }
             // **COMA**
             if (edo == 0 && c == ',')
