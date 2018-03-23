@@ -29,6 +29,7 @@
     ELSE            = 21,
     SWITCH          = 22,
     CASE            = 23,
+    DEFAULT         = 24,
     GREATER         = 30,
     LESS            = 31,
     EQUAL           = 32,
@@ -53,6 +54,7 @@
     //RESERVERD WORDS AND TOOLS FOR DEBUGGING
     RETURN          = 70,
     SEMICOLON       = 75,
+    DOUBLE_POINT    = 76,
     EOL             = 80,
     TOKEN_NONE      = 90,
     RESERVED        = 100,
