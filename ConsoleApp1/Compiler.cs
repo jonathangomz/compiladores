@@ -15,18 +15,36 @@ internal class Compiler: Parser
         this.input = input;
         reservedWords = new Dictionary<string, TokenType>()
         {
-            { "if",     TokenType.IF },
-            { "else",   TokenType.ELSE },
-            { "do",     TokenType.DO },
-            { "while",  TokenType.WHILE },
-            { "switch", TokenType.SWITCH },
-            { "case",   TokenType.CASE },
-            { "for",    TokenType.FOR },
-            { "return", TokenType.RETURN },
-            { "sen",    TokenType.SEN },
-            { "cos",    TokenType.COS },
-            { "tan",    TokenType.TAN },
-            { "print",  TokenType.PRINT }
+            // CONDICIONALES
+            { "if",             TokenType.IF },
+            { "else",           TokenType.ELSE },
+            { "switch",         TokenType.SWITCH },
+            { "case",           TokenType.CASE },
+
+            // CICLOS
+            { "do",             TokenType.DO },
+            { "while",          TokenType.WHILE },
+            { "for",            TokenType.FOR },
+
+            //GENÉRICOS
+            { "print",          TokenType.PRINT },
+            { "return",         TokenType.RETURN },
+
+            // OPERACIONES
+            { "sen",            TokenType.SEN },
+            { "cos",            TokenType.COS },
+            { "tan",            TokenType.TAN },
+
+            //TIPOS
+            { "int",            TokenType.TAN },
+            { "float",          TokenType.TAN },
+            { "char",           TokenType.TAN },
+
+            { "int_const",      TokenType.TAN },
+            { "float_const",    TokenType.TAN },
+            { "char_const",     TokenType.TAN },
+            // MAIN
+            { "program.",       TokenType.PROGRAM },
         };
     }
 }
