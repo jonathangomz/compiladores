@@ -44,7 +44,7 @@ internal class Compiler: Parser
             { "float_const",    TokenType.TAN },
             { "char_const",     TokenType.TAN },
             // MAIN
-            { "program.",       TokenType.PROGRAM },
+            { "program",       TokenType.PROGRAM },
         };
     }
 }
