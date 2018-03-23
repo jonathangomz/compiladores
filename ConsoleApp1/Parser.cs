@@ -70,11 +70,217 @@ internal class Parser: Lexer
             throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo " + errorToken, tok.Text, tok.Type));
     }
 
-/*
- * 
- *      **NUEVO MÉTODO (NOT FUNCTIONAL) ----------------------------->
- * 
- */
+    /*
+     * 
+     *      **NUEVO MÉTODO (NOT FUNCTIONAL) ----------------------------->
+     * 
+     */
+    public float Inicio()
+    {
+        if (tok.Type == TokenType.PROGRAM)
+            Advance(false);
+        if (tok.Type == TokenType.ID)
+        {
+            Advance(false);
+            return Bloque();
+        }
+        else
+            throw new ParserException(string.Format("Se esperaba un ID, se obutvo " + errorToken, tok.Text, tok.Type));
+    }
+
+    public float Bloque()
+    {
+        if (tok.Type == TokenType.LLAVEA)
+        {
+            Advance(false);
+            Orden();
+            if (tok.Type == TokenType.LLAVEC)
+                return 1;
+            else
+                throw new ParserException(string.Format("Se esperaba LLAVEC, se obtuvo " + errorToken, tok.Text, tok.Type));
+        }
+        else
+            throw new ParserException(string.Format("Se esperaba LLAVEA, se obutvo " + errorToken, tok.Text, tok.Type));
+    }
+
+    public float Orden()
+    {
+        if (Tipo())
+            return Dec_var();
+        if (tok.Type == TokenType.INPUT)
+            return In();
+        if (tok.Type == TokenType.PRINT)
+            return Out();
+        if (tok.Type == TokenType.LLAVEA)
+            return Bloque();
+        if (tok.Type == TokenType.IF)
+            return Bloque_if();
+        if (tok.Type == TokenType.DO)
+            return Bloque_do();
+        if (tok.Type == TokenType.WHILE)
+            return Bloque_while();
+        if (tok.Type == TokenType.FOR)
+            return Bloque_for();
+        if (tok.Type == TokenType.SWITCH)
+            return Bloque_switch();
+        if (tok.Type == TokenType.RETURN)
+            if (tok.Type != TokenType.SEMICOLON)
+            {
+                E();
+                if (tok.Type == TokenType.SEMICOLON)
+                    return 1;
+                else
+                    throw new ParserException(string.Format("Se esperaba SEMICOLON, se obtuvo " + errorToken, tok.Text, tok.Type));
+            }
+            else
+                return 1;
+        if (tok.Type == TokenType.ID)
+        {
+            Variable();
+            if (tok.Type == TokenType.ASIGNA)
+            {
+                E();
+                if (tok.Type == TokenType.SEMICOLON)
+                    return 1;
+                else
+                    throw new ParserException(string.Format("Se esperaba SEMICOLON, se obtuvo " + errorToken, tok.Text, tok.Type));
+            }
+            else
+                throw new ParserException(string.Format("Se esperaba ASIGN, se obtuvo " + errorToken, tok.Text, tok.Type));
+        }
+        else
+            throw new ParserException(string.Format("No se reconoce ninguna llamada. ERR " + errorToken, tok.Text, tok.Type));
+    }
+
+    public float Dec_var()
+    {
+        do
+        {
+            if(advance)
+                Advance(false);
+            if (tok.Type == TokenType.ID)
+            {
+                Advance(false);
+                if (tok.Type == TokenType.CORCHETEA)
+                {
+                    Advance(false);
+                    if (Const())
+                    {
+                        if (tok.Type == TokenType.CORCHETEC)
+                        {
+                            Advance(false);
+                            if (tok.Type == TokenType.COMA)
+                                Advance(true);
+                        }
+                        else
+                            throw new ParserException(string.Format("Se esperaba CORCHETEC, se obtuvo " + errorToken, tok.Text, tok.Type));
+                    }
+                    else
+                        throw new ParserException(string.Format("Se esperaba CONST, se obtuvo " + errorToken, tok.Text, tok.Type));
+                    
+                }
+                if (tok.Type != TokenType.SEMICOLON)
+                    throw new ParserException(string.Format("Se esperaba SEMICOLON, se obtuvo " + errorToken, tok.Text, tok.Type));
+            }
+            else
+                throw new ParserException(string.Format("Se esperaba ID, se obtuvo " + errorToken, tok.Text, tok.Type));
+        } while (advance);
+        return 1;
+    }
+
+    public float Bloque_if()
+    {
+        Advance(false);
+        if (tok.Type == TokenType.PARA)
+        {
+            E();
+            if (tok.Type == TokenType.PARC)
+            {
+                Bloque();
+                if (tok.Type == TokenType.ELSE)
+                    Bloque();
+                return 1;
+            }
+            else
+                throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " + errorToken, tok.Text, tok.Type));
+        }
+        else
+            throw new ParserException(string.Format("Se esperaba PARA, se obtuvo " + errorToken, tok.Text, tok.Type));
+    }
+
+    public float Bloque_do()
+    {
+        Advance(false);
+        Bloque();
+        if (tok.Type == TokenType.WHILE)
+        {
+            Advance(false);
+            if (tok.Type == TokenType.PARA)
+            {
+                Par();
+                if (tok.Type == TokenType.SEMICOLON)
+                    return 1;
+                else
+                    throw new ParserException(string.Format("Se esperaba SEMICOLON, se obtuvo " +errorToken, tok.Text, tok.Type));
+            }
+            else
+                throw new ParserException(string.Format("Se esperaba PARA, se obtuvo " + errorToken, tok.Text, tok.Type));
+        }
+        else
+            throw new ParserException(string.Format("Se esperaba WHILE, se obtuvo " + errorToken, tok.Text, tok.Type));
+    }
+
+    public float Bloque_while()
+    {
+        if (tok.Type == TokenType.PARA)
+        {
+            Par();
+        }
+        return Bloque();
+    }
+
+    public float Bloque_for()
+    {
+        Advance(false);
+        if (tok.Type == TokenType.PARA)
+        {
+            Advance(false);
+            if (tok.Type == TokenType.ID)
+            {
+                Advance(false);
+                if (tok.Type == TokenType.ASIGNA)
+                {
+                    Advance(false);
+                    E();
+                    if (tok.Type == TokenType.SEMICOLON)
+                    {
+                        Advance(false);
+                        E();
+                        if (tok.Type == TokenType.SEMICOLON)
+                        {
+                            Advance(false);
+                            if (tok.Type == TokenType.ID)
+                            {
+                                Advance(false);
+                                if (tok.Type == TokenType.ASIGNA)
+                                {
+                                    Advance(false);
+                                    E();
+                                    if (tok.Type == TokenType.PARC)
+                                        Bloque();
+                                    else
+                                        throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " +errorToken, tok.Text, tok.Type));
+                                }
+                                else
+                                    throw new ParserException(string.Format("Se esperaba ASIGNA, se obtuvo " + errorToken, tok.Text, tok.Type));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     public float E()
     {
         do
@@ -83,7 +289,7 @@ internal class Parser: Lexer
             if (advance)
                 Advance(false);
             if (tok.Type == TokenType.OR)
-                Advance(false);
+                Advance(true);
         } while (advance);
         if ((tok.Type != TokenType.EOL || tok.Type == TokenType.PARC) && PAR.Count == 0)
             throw new ParserException(string.Format("Error al final de la línea " + errorToken, tok.Text, tok.Type));
@@ -106,7 +312,7 @@ internal class Parser: Lexer
     public float E2()
     {
         if (tok.Type == TokenType.NOT_EQUAL)
-            Advance(adv: true);
+            Advance(true);
         return E3();
     }
 
@@ -173,7 +379,7 @@ internal class Parser: Lexer
         if (tok.Type == TokenType.SUM ||
             tok.Type == TokenType.RES)
         {
-            Advance(true);
+            Advance(false);
         }
         return Op();
     }
@@ -181,12 +387,9 @@ internal class Parser: Lexer
     public float Op()
     {
         // Si es un CONST ------- */
-        if (tok.Type == TokenType.INT_CONST ||
-            tok.Type == TokenType.CHAR_CONST ||
-            tok.Type == TokenType.FLOAT_CONST ||
-            tok.Type == TokenType.STRING_CONST)
+        if (Const())
         {
-            return Const();
+            return 1;
         }
         // Si es un ID ----------*/
         if (tok.Type == TokenType.ID)
@@ -204,44 +407,104 @@ internal class Parser: Lexer
             throw new ParserException(string.Format("Se esperaba ID | CONST | PARA, se obtuvo " + errorToken, tok.Text, tok.Type));
     }
 
-    public float Const()
+    public float In()
     {
-        if (tok.Type == TokenType.INT_CONST)
-            return Advance(1);
-        if (tok.Type == TokenType.CHAR_CONST)
-            return Advance(1);
-        if (tok.Type == TokenType.FLOAT_CONST)
-            return Advance(1);
-        if (tok.Type == TokenType.STRING_CONST)
-            return Advance(1);
+        Advance(false);
+        if (tok.Type == TokenType.PARA)
+        {
+            do
+            {
+                Variable();
+                if (advance)
+                    Advance(false);
+                if (tok.Type == TokenType.COMA)
+                    Advance(true);
+            } while (advance);
+            if (NextToken().Type == TokenType.PARA)
+                return 1;
+            else
+                throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " + errorToken, tok.Text, tok.Type));
+        }
         else
-            throw new ParserException(string.Format("Se esperaba un CONST se obtuvo " + errorToken, tok.Text, tok.Type));
+            throw new ParserException(string.Format("Se esperaba PARA, se obtuvo " + errorToken, tok.Text, tok.Type));
     }
 
     public float Out()
     {
-        tok = NextToken();
+        Advance(false);
         if (tok.Type != TokenType.PARA)
-            throw new ParserException(string.Format("Se esperaba PARA, se obtuvo " + errorToken, tok.Text, tok.Type));
-        do
         {
-            Expression();
-            if (advance)
-                Advance(false);
-            if (tok.Type == TokenType.COMA)
-                Advance(true);
-        } while (advance);
-        if (NextToken().Type != TokenType.PARA)
-            throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " + errorToken, tok.Text, tok.Type));
-        return 1;
+            do
+            {
+                Expression();
+                if (advance)
+                    Advance(false);
+                if (tok.Type == TokenType.COMA)
+                    Advance(true);
+            } while (advance);
+            if (NextToken().Type == TokenType.PARA)
+                return 1;
+            else
+                throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " + errorToken, tok.Text, tok.Type));
+        }
+        else
+            throw new ParserException(string.Format("Se esperaba PARA, se obtuvo " + errorToken, tok.Text, tok.Type));
     }
 
-/*
- *
- *  EXTRAS
- *  Description: Reduce lines of code above using this methods.
- * 
- */
+    public bool Tipo()
+    {
+        if (tok.Type == TokenType.CHAR ||
+           tok.Type == TokenType.FLOAT ||
+           tok.Type == TokenType.INT)
+        {
+            Advance(false);
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public bool Const()
+    {
+        if (tok.Type == TokenType.INT_CONST ||
+            tok.Type == TokenType.CHAR_CONST ||
+            tok.Type == TokenType.FLOAT_CONST)
+        {
+            Advance(false);
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public float Variable()
+    {
+        Advance(false);
+        if (tok.Type == TokenType.CORCHETEA)
+        {
+            Advance(false);
+            if (Const())
+            {
+                if (tok.Type == TokenType.CORCHETEC) {
+                    Advance(false);
+                    return 1;
+                }
+                else
+                    throw new ParserException(string.Format("Se esperaba CORCHETEC, se obtuvo " + errorToken, tok.Text, tok.Type));
+            }
+            else
+                throw new ParserException(string.Format("Se esperaba CONST, se obtuvo " + errorToken, tok.Text, tok.Type));
+        }
+        else
+            return 1;
+    }
+
+    /*
+     *
+     *  EXTRAS
+     *  Description: Reduce lines of code above using this methods.
+     * 
+     */
     public float Par()
     {
         /*
@@ -269,10 +532,10 @@ internal class Parser: Lexer
          *  This method is used
          *  in final ways of the code.
          */
-        if (i==0)
-            advance = false;
-        else
+        if (i==1)
             advance = true;
+        else
+            advance = false;
         return 1;
     }
     public void Advance(bool adv)
