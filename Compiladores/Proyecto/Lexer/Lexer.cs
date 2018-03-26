@@ -1,0 +1,256 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Proyecto.Data;
+
+namespace Proyecto.Lexer
+{
+    public class Lexer
+    {
+        public string input;
+        public Dictionary<string, TokenType> reservedWords;
+        /* Variables del método NextToken() */
+        int index = 0;
+        float edo = 0;
+        // Parámetros variables para crear el Token()
+        string text = "";
+        TokenType tokenType = TokenType.TOKEN_NONE;
+
+        /* Variables del método ListOfToken() */
+        public List<Token> list = new List<Token>();
+
+        /* Regular Expressions */
+        Regex symbol = new Regex(@"[+, *,\/,\-, (, ), [,\],{,}, %, ^, !, =, \|, >, <]");
+        
+        /* Constructor */
+        public Lexer()
+        {
+        }
+
+        /* NextToken(string, List<string>) returns Token */
+        public Token NextToken()
+        {
+            for (int i = index; i < input.Length; i++)
+            {
+                char c = input[i];
+                while ((c == ' ' || c == '\t') && edo == 0)
+                {
+                    i++;
+                }
+                if (i >= input.Length)
+                {
+                    return new Token();
+                }
+                // **SUMA**
+                if (edo == 0 && c == '+')
+                {
+                    edo = 0;
+                    return new Token(TokenType.SUM, input.Substring(index, ++index - i));
+                }
+                // **RESTA**
+                if (edo == 0 && c == '-')
+                {
+                    edo = 0;
+                    return new Token(TokenType.RES, input.Substring(index, ++index - i));
+                }
+                // **DIVISIÓN**
+                if (edo == 0 && c == '/')
+                {
+                    edo = 0;
+                    return new Token(TokenType.DIV, input.Substring(index, ++index - i));
+                }
+                // **MULTIPLICACIÓN**
+                if (edo == 0 && c == '*')
+                {
+                    edo = 0;
+                    return new Token(TokenType.MUL, input.Substring(index, ++index - i));
+                }
+                // **MÓDULO**
+                if (edo == 0 && c == '%')
+                {
+                    return new Token(TokenType.MOD, input.Substring(index, ++index - i));
+                }
+                // **POTENCIA**
+                if (edo == 0 && c == '^')
+                {
+                    return new Token(TokenType.POT, input.Substring(index, ++index - i));
+                }
+                // **IGUAL O ASIGNACIÓN**
+                if (edo == 0 && c == '=')
+                {
+                    edo = 1;
+                    continue;
+                }
+                // *ASIGNACIÓN
+                if (edo == 1 && c != '=')
+                {
+                    edo = 0;
+                    text = input.Substring(index, i - index).Trim();
+                    index = i;
+                    tokenType = TokenType.ASIGNA;
+                    return new Token(tokenType, text);
+                }
+                // *IGUAL
+                if (edo == 1 && c == '=')
+                {
+                    edo = 0;
+                    return new Token(TokenType.EQUAL, input.Substring(index, ++index - i));
+                }
+                // **MENOR, MAYOR O DIFERENTE**
+                if (edo == 0 && (c == '<' || c == '>' || c == '!'))
+                {
+                    if (c == '<')
+                        edo = 2.1F;
+                    if (c == '>')
+                        edo = 2.2F;
+                    if (c == '!')
+                        edo = 2.3F;
+                    continue;
+                }
+                // *MENOR
+                if (edo == 2.1F && c != '=')
+                {
+                    edo = 0;
+                    return new Token(TokenType.LESS, input.Substring(index, ++index - i));
+                }
+                // *MENOR O IGUAL
+                if (edo == 2.1F && c == '=')
+                {
+                    i++;
+                    edo = 0;
+                    text = input.Substring(index, i - index).Trim();
+                    index = i;
+                    tokenType = TokenType.LESS_EQUAL;
+                    return new Token(tokenType, text);
+                }
+                // *MAYOR
+                if (edo == 2.2F && c != '=')
+                {
+                    edo = 0;
+                    return new Token(TokenType.GREATER, input.Substring(index, ++index - i));
+                }
+                // MAYOR O IGUAL
+                if (edo == 2.2F && c == '=')
+                {
+                    i++;
+                    edo = 0;
+                    text = input.Substring(index, i - index).Trim();
+                    index = i;
+                    tokenType = TokenType.GREATER_EQUAL;
+                    return new Token(tokenType, text);
+                }
+                // *NEGACIÓN
+                if (edo == 2.3F && c != '=')
+                {
+                    edo = 0;
+                    return new Token(TokenType.NOT, input.Substring(index, ++index - i));
+                }
+                // *DIFERENTE
+                if (edo == 2.3F && c == '=')
+                {
+                    i++;
+                    edo = 0;
+                    text = input.Substring(index, i - index).Trim();
+                    index = i;
+                    tokenType = TokenType.NOT_EQUAL;
+                    return new Token(tokenType, text);
+                }
+                // **PARÉNTESIS DE APERTURA**
+                if (edo == 0 && c == '(')
+                {
+                    edo = 0;
+                    return new Token(TokenType.PARA, input.Substring(index, ++index - i));
+                }
+                // **PARÉNTESIS DE CIERRE**
+                if (edo == 0 && c == ')')
+                {
+                    edo = 0;
+                    return new Token(TokenType.PARC, input.Substring(index, ++index - i));
+                }
+                // **COMA**
+                if (edo == 0 && c == ',')
+                {
+                    edo = 0;
+                    return new Token(TokenType.COMA, input.Substring(index, ++index - i));
+                }
+                // **ID**
+                // Si es un ID y está al final de la línea
+                if (((edo == 0 && Char.IsLetter(c)) || (edo == 3 && Char.IsLetterOrDigit(c))) && i + 1 >= input.Length)
+                {
+                    i++;
+                    edo = 0;
+                    text = input.Substring(index, i - index).Trim();
+                    index = i;
+                    if (reservedWords.ContainsKey(text))
+                        tokenType = reservedWords[text];
+                    else
+                        tokenType = TokenType.ID;
+                    return new Token(tokenType, text);
+                }
+                // Si comienza un ID o continua sigue al siguiente caracter
+                if ((edo == 0 && Char.IsLetter(c)) || (edo == 3 && (Char.IsLetterOrDigit(c) || c == '_')))
+                {
+                    edo = 3;
+                    continue;
+                }
+                //Si el siguiente caracter es otro simbolo regresa el texto del ID
+                if (edo == 3 && symbol.IsMatch(c.ToString()))
+                {
+                    edo = 0;
+                    text = input.Substring(index, i - index).Trim();
+                    index = i;
+                    if (reservedWords.ContainsKey(text))
+                        tokenType = reservedWords[text];
+                    else
+                        tokenType = TokenType.ID;
+                    return new Token(tokenType, text);
+                }
+                // **NUM**
+                // Si es un NUM y está al final de la línea
+                if (((edo == 0 && Char.IsNumber(c)) || (edo == 5 && Char.IsNumber(c))) && i + 1 >= input.Length)
+                {
+                    i++;
+                    edo = 0;
+                    text = input.Substring(index, i - index).Trim();
+                    tokenType = TokenType.NUM;
+                    index = i;
+                    return new Token(tokenType, text);
+                }
+                // Si comienza un NUM o continua sigue al siguiente caracter
+                if ((edo == 0 || edo == 5) && (Char.IsNumber(c) || c == '.'))
+                {
+                    edo = 5;
+                    continue;
+                }
+                //Si el siguiente caracter es otro simbolo regresa el texto del NUM
+                if (edo == 5 && symbol.IsMatch(c.ToString()))
+                {
+                    edo = 0;
+                    text = input.Substring(index, i - index).Trim();
+                    tokenType = TokenType.NUM;
+                    index = i;
+                    return new Token(tokenType, text);
+                }
+                else
+                {
+                   
+                }
+            }
+            return new Token(TokenType.EOL, "");
+        }
+
+        /* ListOfToken(string, List<string>) returns List<Token> */
+        public List<Token> ListOfToken()
+        {
+            Token t = NextToken();
+            while (t.TokenType != TokenType.EOL)
+            {
+                list.Add(t);
+                t = NextToken();
+            }
+            return list;
+        }
+
+        public bool CheckInput(String input) => symbol.IsMatch(input);
+    }
+}
