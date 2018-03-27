@@ -96,12 +96,12 @@ internal class Parser: Lexer
     {
         if (tok.Type == TokenType.LLAVEA)
         {
-            Advance(false);
-            Orden();
-            if (tok.Type == TokenType.LLAVEC)
-                return 1;
-            else
-                throw new ParserException(string.Format("Se esperaba LLAVEC, se obtuvo " + errorToken, tok.Text, tok.Type));
+            do
+            {
+                Advance(false);
+                Orden();
+            } while (tok.Type != TokenType.LLAVEC);
+            return 1;
         }
         else
             throw new ParserException(string.Format("Se esperaba LLAVEA, se obutvo " + errorToken, tok.Text, tok.Type));
@@ -190,9 +190,14 @@ internal class Parser: Lexer
                     }
                     else
                         throw new ParserException(string.Format("Se esperaba CONST, se obtuvo " + errorToken, tok.Text, tok.Type));
-                    
+
                 }
-                if (tok.Type != TokenType.SEMICOLON)
+                if (tok.Type == TokenType.SEMICOLON)
+                {
+                    Advance(false);
+                    return 1;
+                }
+                else
                     throw new ParserException(string.Format("Se esperaba SEMICOLON, se obtuvo " + errorToken, tok.Text, tok.Type));
             }
             else
@@ -357,7 +362,10 @@ internal class Parser: Lexer
                 Advance(true);
         } while (advance);
         if ((tok.Type != TokenType.EOL || tok.Type == TokenType.PARC) && PAR.Count == 0)
-            throw new ParserException(string.Format("Error al final de la línea " + errorToken, tok.Text, tok.Type));
+        {
+            if (tok.Type != TokenType.SEMICOLON)
+                throw new ParserException(string.Format("Error al final de la línea " + errorToken, tok.Text, tok.Type));
+        }
         return 1;
     }
 
@@ -459,7 +467,7 @@ internal class Parser: Lexer
         // Si es un ID ----------*/
         if (tok.Type == TokenType.ID)
         {
-            tok = NextToken();
+            Advance(false);
             if (tok.Type == TokenType.PARA)
                 return Par();
             else
@@ -583,7 +591,9 @@ internal class Parser: Lexer
             PAR.Pop();
             Advance(false);
             if (tok.Type == TokenType.PARA)
+            {
                 Par();
+            }
             return 1;
         }
         else

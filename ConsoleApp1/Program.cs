@@ -14,6 +14,12 @@ public class Compiladores
     public static Regex yes = new Regex(@"(?i)^(y|Y|YES|Yes|yes)$");
     public static Regex no = new Regex(@"(?i)^(n|N|NO|No|no)$");
 
+    //Just for testing
+    static string pt            = "program test{";
+    static string codeReturn    = "return(\"ABC\"+3*3.14);";
+    static string codeVar       = "int a;float x[10];";
+    static string end           = "}";
+
     public Compiladores()
     {
     }
@@ -35,6 +41,9 @@ public class Compiladores
 
                 // Se introduce un comando
                 input = Console.ReadLine();
+                
+                //input = "program test{return(\"ABC\"+3*3.14);}"; //return
+                input = pt + codeVar + end;
 
                 // Se inicializan las clases que ejecutarán el chequeo
                 //** Compiler compi  = new Compiler(input, reservedWords); // Working on it...

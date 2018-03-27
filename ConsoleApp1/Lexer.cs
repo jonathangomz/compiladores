@@ -40,38 +40,22 @@ internal class Lexer: CompilerBase
             }
             // **SUMA**
             if (edo == 0 && c == '+')
-            {
-                edo = 0;
                 return new Token(TokenType.SUM, input.Substring(index, ++index - i));
-            }
             // **RESTA**
             if (edo == 0 && c == '-')
-            {
-                edo = 0;
                 return new Token(TokenType.RES, input.Substring(index, ++index - i));
-            }
             // **DIVISIÓN**
             if (edo == 0 && c == '/')
-            {
-                edo = 0;
                 return new Token(TokenType.DIV, input.Substring(index, ++index - i));
-            }
             // **MULTIPLICACIÓN**
             if (edo == 0 && c == '*')
-            {
-                edo = 0;
                 return new Token(TokenType.MUL, input.Substring(index, ++index - i));
-            }
             // **MÓDULO**
             if(edo == 0 &&  c == '%')
-            {
                 return new Token(TokenType.MOD, input.Substring(index, ++index - i));
-            }
             // **POTENCIA**
             if(edo == 0 && c == '^')
-            {
                 return new Token(TokenType.POT, input.Substring(index, ++index - i));
-            }
             // **PUNTO Y COMA
             if (edo == 0 && c == ';')
                 return new Token(TokenType.SEMICOLON, input.Substring(index, ++index - i));
@@ -109,10 +93,7 @@ internal class Lexer: CompilerBase
             }
             // *MENOR
             if (edo == 2.1F && c != '=')
-            {
-                edo = 0;
                 return new Token(TokenType.LESS, input.Substring(index, ++index - i));
-            }
             // *MENOR O IGUAL
             if (edo == 2.1F && c == '=')
             {
@@ -125,10 +106,7 @@ internal class Lexer: CompilerBase
             }
             // *MAYOR
             if (edo == 2.2F && c != '=')
-            {
-                edo = 0;
                 return new Token(TokenType.GREATER, input.Substring(index, ++index - i));
-            }
             // MAYOR O IGUAL
             if(edo == 2.2F && c == '=')
             {
@@ -141,10 +119,7 @@ internal class Lexer: CompilerBase
             }
             // *NEGACIÓN
             if (edo == 2.3F && c != '=')
-            {
-                edo = 0;
                 return new Token(TokenType.NOT, input.Substring(index, ++index - i));
-            }
             // *DIFERENTE
             if(edo == 2.3F && c == '=')
             {
@@ -157,33 +132,38 @@ internal class Lexer: CompilerBase
             }
             // **PARÉNTESIS DE APERTURA**
             if (edo == 0 && c == '(')
-            {
-                edo = 0;
                 return new Token(TokenType.PARA, input.Substring(index, ++index - i));
-            }
             // **PARÉNTESIS DE CIERRE**
             if (edo == 0 && c == ')')
-            {
-                edo = 0;
                 return new Token(TokenType.PARC, input.Substring(index, ++index - i));
-            }
             // **LLAVE DE APERTURA**
             if(edo == 0 && c == '{')
-            {
-                edo = 0;
                 return new Token(TokenType.LLAVEA, input.Substring(index, ++index - i));
-            }
             // **LLAVE DE CIERRE
             if (edo == 0 && c == '}')
-            {
-                edo = 0;
                 return new Token(TokenType.LLAVEC, input.Substring(index, ++index - i));
-            }
+            // **CORCHETE DE APERTURA**
+            if (edo == 0 && c == '[')
+                return new Token(TokenType.LLAVEA, input.Substring(index, ++index - i));
+            // **CORCHETE DE CIERRE
+            if (edo == 0 && c == ']')
+                return new Token(TokenType.LLAVEC, input.Substring(index, ++index - i));
             // **COMA**
             if (edo == 0 && c == ',')
-            {
-                edo = 0;
                 return new Token(TokenType.COMA, input.Substring(index, ++index - i));
+            // **STRING**
+            if((edo == 0 && c == '"') || (edo == 10 && c != '"'))
+            {
+                edo = 10;
+                continue;
+            }
+            if(edo == 10 && c == '"')
+            {
+                i++;
+                edo = 0;
+                text = input.Substring(index, i - index).Trim();
+                index = i;
+                return new Token(TokenType.CHAR_CONST, text);
             }
             // **ID**
             // Si es un ID y está al final de la línea
@@ -239,7 +219,10 @@ internal class Lexer: CompilerBase
             {
                 edo = 0;
                 text = input.Substring(index, i - index).Trim();
-                tokenType = TokenType.NUM;
+                if (text.Contains("."))
+                    tokenType = TokenType.FLOAT_CONST;
+                else
+                    tokenType = TokenType.INT_CONST;
                 index = i;
                 return new Token(tokenType, text);
             }
