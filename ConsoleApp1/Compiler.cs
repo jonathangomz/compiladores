@@ -36,13 +36,10 @@ internal class Compiler: Parser
             { "tan",            TokenType.TAN },
 
             //TIPOS
-            { "int",            TokenType.TAN },
-            { "float",          TokenType.TAN },
-            { "char",           TokenType.TAN },
-
-            { "int_const",      TokenType.TAN },
-            { "float_const",    TokenType.TAN },
-            { "char_const",     TokenType.TAN },
+            { "int",            TokenType.INT },
+            { "float",          TokenType.FLOAT },
+            { "char",           TokenType.CHAR },
+            
             // MAIN
             { "program",       TokenType.PROGRAM },
         };
