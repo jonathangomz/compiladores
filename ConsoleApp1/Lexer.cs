@@ -93,7 +93,10 @@ internal class Lexer: CompilerBase
             }
             // *MENOR
             if (edo == 2.1F && c != '=')
-                return new Token(TokenType.LESS, input.Substring(index, ++index - i));
+            {
+                edo = 0;
+                return new Token(TokenType.LESS, input.Substring(index-1, ++index - i));
+            }
             // *MENOR O IGUAL
             if (edo == 2.1F && c == '=')
             {
@@ -106,9 +109,12 @@ internal class Lexer: CompilerBase
             }
             // *MAYOR
             if (edo == 2.2F && c != '=')
+            {
+                edo = 0;
                 return new Token(TokenType.GREATER, input.Substring(index, ++index - i));
+            }
             // MAYOR O IGUAL
-            if(edo == 2.2F && c == '=')
+            if (edo == 2.2F && c == '=')
             {
                 i++;
                 edo = 0;
@@ -119,9 +125,12 @@ internal class Lexer: CompilerBase
             }
             // *NEGACIÓN
             if (edo == 2.3F && c != '=')
+            {
+                edo = 0;
                 return new Token(TokenType.NOT, input.Substring(index, ++index - i));
+            }
             // *DIFERENTE
-            if(edo == 2.3F && c == '=')
+            if (edo == 2.3F && c == '=')
             {
                 i++;
                 edo = 0;
@@ -144,10 +153,10 @@ internal class Lexer: CompilerBase
                 return new Token(TokenType.LLAVEC, input.Substring(index, ++index - i));
             // **CORCHETE DE APERTURA**
             if (edo == 0 && c == '[')
-                return new Token(TokenType.LLAVEA, input.Substring(index, ++index - i));
+                return new Token(TokenType.CORCHETEA, input.Substring(index, ++index - i));
             // **CORCHETE DE CIERRE
             if (edo == 0 && c == ']')
-                return new Token(TokenType.LLAVEC, input.Substring(index, ++index - i));
+                return new Token(TokenType.CORCHETEC, input.Substring(index, ++index - i));
             // **COMA**
             if (edo == 0 && c == ',')
                 return new Token(TokenType.COMA, input.Substring(index, ++index - i));
