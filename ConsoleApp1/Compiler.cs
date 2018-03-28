@@ -27,6 +27,7 @@ internal class Compiler: Parser
             { "for",            TokenType.FOR },
 
             //GENÉRICOS
+            { "input",          TokenType.INPUT },
             { "print",          TokenType.PRINT },
             { "return",         TokenType.RETURN },
 
