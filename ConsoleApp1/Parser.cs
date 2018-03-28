@@ -96,10 +96,11 @@ internal class Parser: Lexer
     {
         if (tok.Type == TokenType.LLAVEA)
         {
+            Advance(false);
             do
             {
-                Advance(false);
                 Orden();
+                Advance(false);
             } while (tok.Type != TokenType.LLAVEC);
             return 1;
         }
@@ -109,25 +110,26 @@ internal class Parser: Lexer
 
     public float Orden()
     {
+        Console.WriteLine(tok.Text+" <- "+tok.Type);
         if (Tipo())
             return Dec_var();
-        if (tok.Type == TokenType.INPUT)
+        else if (tok.Type == TokenType.INPUT)
             return In();
-        if (tok.Type == TokenType.PRINT)
+        else if (tok.Type == TokenType.PRINT)
             return Out();
-        if (tok.Type == TokenType.LLAVEA)
+        else if (tok.Type == TokenType.LLAVEA)
             return Bloque();
-        if (tok.Type == TokenType.IF)
+        else if (tok.Type == TokenType.IF)
             return Bloque_if();
-        if (tok.Type == TokenType.DO)
+        else if (tok.Type == TokenType.DO)
             return Bloque_do();
-        if (tok.Type == TokenType.WHILE)
+        else if (tok.Type == TokenType.WHILE)
             return Bloque_while();
-        if (tok.Type == TokenType.FOR)
+        else if (tok.Type == TokenType.FOR)
             return Bloque_for();
-        if (tok.Type == TokenType.SWITCH)
+        else if (tok.Type == TokenType.SWITCH)
             return Bloque_switch();
-        if (tok.Type == TokenType.RETURN)
+        else if (tok.Type == TokenType.RETURN)
         {
             Advance(false);
             if (tok.Type != TokenType.SEMICOLON)
@@ -135,7 +137,6 @@ internal class Parser: Lexer
                 E();
                 if (tok.Type == TokenType.SEMICOLON)
                 {
-                    Advance(false);
                     return 1;
                 }
                 else
@@ -143,15 +144,15 @@ internal class Parser: Lexer
             }
             else
             {
-                Advance(false);
                 return 1;
             }
         }
-        if (tok.Type == TokenType.ID)
+        else if (tok.Type == TokenType.ID)
         {
             Variable();
             if (tok.Type == TokenType.ASIGNA)
             {
+                Advance(false);
                 E();
                 if (tok.Type == TokenType.SEMICOLON)
                     return 1;
@@ -192,9 +193,8 @@ internal class Parser: Lexer
                         throw new ParserException(string.Format("Se esperaba CONST, se obtuvo " + errorToken, tok.Text, tok.Type));
 
                 }
-                if (tok.Type == TokenType.SEMICOLON)
+                if (tok.Type == TokenType.SEMICOLON && advance == false)
                 {
-                    Advance(false);
                     return 1;
                 }
                 else
@@ -203,7 +203,6 @@ internal class Parser: Lexer
             else
                 throw new ParserException(string.Format("Se esperaba ID, se obtuvo " + errorToken, tok.Text, tok.Type));
         } while (advance);
-        return 1;
     }
 
     public float Bloque_if()
@@ -211,16 +210,16 @@ internal class Parser: Lexer
         Advance(false);
         if (tok.Type == TokenType.PARA)
         {
-            E();
-            if (tok.Type == TokenType.PARC)
+            Par();
+            Bloque();
+            Advance(false);
+            if (tok.Type == TokenType.ELSE)
             {
+                Advance(false);
                 Bloque();
-                if (tok.Type == TokenType.ELSE)
-                    Bloque();
-                return 1;
             }
-            else
-                throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " + errorToken, tok.Text, tok.Type));
+
+            return 1;
         }
         else
             throw new ParserException(string.Format("Se esperaba PARA, se obtuvo " + errorToken, tok.Text, tok.Type));
@@ -230,6 +229,7 @@ internal class Parser: Lexer
     {
         Advance(false);
         Bloque();
+        Advance(false);
         if (tok.Type == TokenType.WHILE)
         {
             Advance(false);
@@ -250,6 +250,7 @@ internal class Parser: Lexer
 
     public float Bloque_while()
     {
+        Advance(false);
         if (tok.Type == TokenType.PARA)
         {
             Par();
@@ -262,6 +263,7 @@ internal class Parser: Lexer
         Advance(false);
         if (tok.Type == TokenType.PARA)
         {
+            PAR.Push(tok);
             Advance(false);
             if (tok.Type == TokenType.ID)
             {
@@ -300,7 +302,10 @@ internal class Parser: Lexer
                     throw new ParserException(string.Format("Se esperaba ASIGNA, se obtuvo " + errorToken, tok.Text, tok.Type));
             }
             if (tok.Type == TokenType.PARC)
+            {
+                PAR.Pop();
                 return 1;
+            }
             else
                 throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " + errorToken, tok.Text, tok.Type));
         }
@@ -341,7 +346,6 @@ internal class Parser: Lexer
                     else
                         Bloque();
                 } while (tok.Type == TokenType.LLAVEC);
-                Advance(false);
                 return 1;
             }
             else
@@ -485,16 +489,25 @@ internal class Parser: Lexer
         Advance(false);
         if (tok.Type == TokenType.PARA)
         {
+            Advance(false);
             do
             {
+                if (tok.Type != TokenType.ID)
+                    throw new ParserException(string.Format("Se esperaba un ID, se obtuvo " + errorToken, tok.Text, tok.Type));
                 Variable();
                 if (advance)
                     Advance(false);
                 if (tok.Type == TokenType.COMA)
                     Advance(true);
             } while (advance);
-            if (NextToken().Type == TokenType.PARA)
-                return 1;
+            if (tok.Type == TokenType.PARC)
+            {
+                Advance(false);
+                if (tok.Type == TokenType.SEMICOLON)
+                    return 1;
+                else
+                    throw new ParserException(string.Format("Se esperaba SEMICOLON, se obtuvo " + errorToken, tok.Text, tok.Type));
+            }
             else
                 throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " + errorToken, tok.Text, tok.Type));
         }
@@ -505,18 +518,27 @@ internal class Parser: Lexer
     public float Out()
     {
         Advance(false);
-        if (tok.Type != TokenType.PARA)
+        if (tok.Type == TokenType.PARA)
         {
+            PAR.Push(tok);
+            Advance(false);
             do
             {
-                Expression();
+                E();
                 if (advance)
                     Advance(false);
                 if (tok.Type == TokenType.COMA)
                     Advance(true);
             } while (advance);
-            if (NextToken().Type == TokenType.PARA)
-                return 1;
+            if (tok.Type == TokenType.PARC)
+            {
+                PAR.Pop();
+                Advance(false);
+                if (tok.Type == TokenType.SEMICOLON)
+                    return 1;
+                else
+                    throw new ParserException(string.Format("Se esperaba SEMICOLON, se obtuvo " + errorToken, tok.Text, tok.Type));
+            }
             else
                 throw new ParserException(string.Format("Se esperaba PARC, se obtuvo " + errorToken, tok.Text, tok.Type));
         }
