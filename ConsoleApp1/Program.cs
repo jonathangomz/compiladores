@@ -17,9 +17,18 @@ public class Compiladores
     //Just for testing
     static string pt            = "program test{";
     static string codeReturn    = "return(\"ABC\"+3*3.14);";
-    static string codeVar       = "int a;float x[10];";
+    static string codeVar       = "int i,j,k;char c;float x[10];k=1;";
+    static string codeWhile     = "while(a>b){input(a,b);}";
+    static string codeDoWhile   = "do{print(\"programa de ejemplo..\",a+b);}while(k>8);";
+    static string codeIf        = "if(a>b){j=j+1;i=3*k+2/j;}else{k=i%2;}";
+    static string codeFor       = "for(i=1;i<=10;i=i+1){print(a);}";
+    static string codeFULL      = "int i,j,k;char c;float x[10];k=1;do{for(i=1;i<=10;i=i+1){print(\"programa de ejemplo..\");if(a>b){j=j+1;i=3*k+2/j;}else{k=i%2;}}}while(k>8);";
     static string end           = "}";
-
+    /*
+     * ERRORES:
+     * - LESS, GREATHER no aparece en la lista de Tokens
+     * - EQUAL y ASING los está tomando mal
+     */
     public Compiladores()
     {
     }
@@ -43,7 +52,7 @@ public class Compiladores
                 input = Console.ReadLine();
                 
                 //input = "program test{return(\"ABC\"+3*3.14);}"; //return
-                input = pt + codeVar + end;
+                input = pt + codeFULL + end;
 
                 // Se inicializan las clases que ejecutarán el chequeo
                 //** Compiler compi  = new Compiler(input, reservedWords); // Working on it...
