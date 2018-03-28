@@ -19,10 +19,12 @@ C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\bin\Debug\SharpRaven.pd
 C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\bin\Debug\SharpRaven.xml
 C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\obj\Debug\Compiladores.csprojResolveAssemblyReference.cache
-C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\obj\Debug\Compiladores.exe.config
 C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\obj\Debug\Compiladores.csproj.CoreCompileInputs.cache
 C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\obj\Debug\Compiladores.exe
 C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\obj\Debug\Compiladores.pdb
 C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\Compiladores.csprojResolveAssemblyReference.cache
 C:\Users\Soporte3\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\Compiladores.csproj.CopyComplete
 C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\obj\Debug\Compiladores.csproj.CopyComplete
+C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\bin\Debug\RestSharp.dll
+C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\bin\Debug\System.ValueTuple.dll
+C:\Users\Rorschach\source\repos\compiladores\ConsoleApp1\bin\Debug\System.ValueTuple.xml
